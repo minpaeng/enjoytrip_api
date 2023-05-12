@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ssafy.enjoytrip.repository.infoboard.InfoBoardRepository">
+   <resultMap id="infoBoardMap" type="infoBoardDto">
+      <result column="info_board_id" property="id" jdbcType="INTEGER" javaType="int" />
+      <result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+      <result column="title" property="title" jdbcType="VARCHAR" javaType="String" />
+      <result column="content" property="content" jdbcType="VARCHAR" javaType="String" />
+      <result column="hit" property="hit" jdbcType="INTEGER" javaType="int" />
+      <result column="register_time" property="registerDate" jdbcType="TIMESTAMP" javaType="String" />
+   </resultMap>
+
+   <update id="modify" parameterType="infoBoardDto">
+      update info_board 
+      set title=#{title}, content=#{content} 
+      where info_board_id=#{id}
+   </update>
+   
+   <select id="select" parameterType="int" resultMap="infoBoardMap">
+      select info_board_id, user_id, title, content, hit, register_time
+      from info_board
+      where info_board_id=#{id}
+   </select>
+   
+   <select id="list" parameterType="Map" resultMap="infoBoardMap">
+      select info_board_id, user_id, title, content, hit, register_time
+      from info_board
+      <if test="key != null and word != null">
+   			<choose>
+   				<when test="'title'.equals(key)">
+   					where title like concat('%', #{word}, '%')
+   				</when>
+   				<otherwise>
+   					where ${key}=#{word}
+   				</otherwise>
+   			</choose>
+   		</if>
+      order by register_time desc, info_board_id desc
+      limit ${offset}, ${size}
+   </select>
+
+   <delete id="delete" parameterType="int">
+      delete from info_board 
+      where info_board_id=#{id}
+   </delete>
+   
+   <insert id="write" parameterType="infoBoardDto">
+      insert into info_board(user_id, title, content)
+      values(#{userId},#{title},#{content})
+   </insert>
+
+   <update id="updateHit" parameterType="int">
+      update info_board
+      set hit = hit + 1
+      where info_board_id=#{id}
+   </update>
+   
+   <select id="totalCount" resultType="int" parameterType="Map">
+   		select count(info_board_id)
+   		from info_board
+   		<if test="key != null and word != null">
+   			<choose>
+   				<when test="'title'.equals(key)">
+   					where title like concat('%', #{word}, '%')
+   				</when>
+   				<otherwise>
+   					where ${key}=#{word}
+   				</otherwise>
+   			</choose>
+   		</if>
+   </select>
+
+</mapper>

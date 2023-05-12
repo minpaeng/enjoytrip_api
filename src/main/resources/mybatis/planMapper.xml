@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+namespace="edu.ssafy.enjoytrip.repository.plan.PlanRepository">
+	<resultMap id="planDtoMap" type="PlanDto">
+		<result column="plan_id" property="id" jdbcType="INTEGER" javaType="int" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+		<result column="start_date" property="startDate" jdbcType="TIMESTAMP" javaType="String" />
+		<result column="end_date" property="endDate" jdbcType="TIMESTAMP" javaType="String" />
+		<result column="memo" property="memo" jdbcType="VARCHAR" javaType="String" />
+		<result column="plan_title" property="title" jdbcType="VARCHAR" javaType="String" />
+		<result column="register_time" property="registerDate" jdbcType="TIMESTAMP" javaType="String" />
+		<result column="share" property="share" jdbcType="VARCHAR" javaType="String" />
+	</resultMap>
+
+	<resultMap id="attractionDtoMap" type="AttractionDto">
+		<result column="content_id" property="contentId" jdbcType="INTEGER" javaType="int" />
+		<result column="content_type_id" property="contentTypeId" jdbcType="INTEGER" javaType="int" />
+		<result column="title" property="title" jdbcType="VARCHAR" javaType="String" />
+		<result column="addr1" property="addr1" jdbcType="VARCHAR" javaType="String" />
+		<result column="addr2" property="addr2" jdbcType="VARCHAR" javaType="String" />
+		<result column="zipcode" property="zipCode" jdbcType="VARCHAR" javaType="String" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" javaType="String" />
+		<result column="first_image" property="firstImage" jdbcType="VARCHAR" javaType="String" />
+		<result column="first_image2" property="firstImage2" jdbcType="VARCHAR" javaType="String" />
+		<result column="readcount" property="readCount" jdbcType="INTEGER" javaType="int" />
+		<result column="sido_code" property="sidoCode" jdbcType="INTEGER" javaType="int" />
+		<result column="gugun_code" property="gugunCode" jdbcType="INTEGER" javaType="int" />
+		<result column="latitude" property="latitude" jdbcType="DECIMAL" javaType="String" />
+		<result column="longitude" property="longitude" jdbcType="DECIMAL" javaType="String" />
+		<result column="mlevel" property="mlevel" jdbcType="VARCHAR" javaType="String" />
+	</resultMap>
+
+
+	<resultMap id="reviewDtoMap" type="ReviewDto">
+		<result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="int" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+		<result column="plan_id" property="planId" jdbcType="INTEGER" javaType="int" />
+		<result column="title" property="title" jdbcType="VARCHAR" javaType="String" />
+		<result column="content" property="content" jdbcType="VARCHAR" javaType="String" />
+		<result column="register_time" property="registerTime" jdbcType="TIMESTAMP" javaType="String" />
+		<result column="hit" property="hit" jdbcType="INTEGER" javaType="int" />
+		<result column="like" property="like" jdbcType="INTEGER" javaType="int" />
+	</resultMap>
+
+	<resultMap id="planInfoDtoMap" type="PlanInfoDto">
+		<result column="plan_id" property="planId" jdbcType="INTEGER" javaType="int" />
+		<result column="content_id" property="contentId" jdbcType="INTEGER" javaType="int" />
+		<result column="sequence" property="sequence" jdbcType="INTEGER" javaType="int" />
+	</resultMap>
+
+
+
+	<select id="list" resultMap="planDtoMap">
+		select *
+		from plan
+		order by register_time desc limit 10
+	</select>
+
+	<select id="listByUserId" parameterType="String" resultMap="planDtoMap">
+		select *
+		from plan
+		where user_id = #{userId}
+		order by register_time desc limit 10
+	</select>
+
+	<select id="select" parameterType="int" resultMap="planDtoMap">
+		select *
+		from plan
+		where plan_id = #{id}
+	</select>
+
+	<update id="modify" parameterType="PlanDto">
+		update plan
+		set start_date = #{startDate},
+		end_date = #{endDate},
+		memo = #{memo},
+		plan_title = #{title},
+		share = #{share}
+		where plan_id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="PlanDto">
+		delete
+		from plan
+		where plan_id = #{id}
+	</delete>
+
+	<insert id="write" parameterType="ReviewDto">
+		insert into review
+		(user_id, plan_id, title, content)
+		values(#{userId},#{planId},#{title},#{content})
+	</insert>
+
+	<select id="selectContentId" parameterType="int" resultType="int">
+		select content_id
+		from plan_to_attraction_info
+		where plan_id = #{id}
+		order by sequence
+	</select>
+
+	<select id="selectAttraction" parameterType="int" resultMap="attractionDtoMap">
+		select *
+		from attraction_info
+		where content_id = #{contentId}
+	</select>
+
+	<select id="topSequence" parameterType="int" resultType="int">
+		select sequence
+		from plan_to_attraction_info
+		where plan_id = #{planId}
+		order by sequence desc limit 1
+	</select>
+
+	<update id="planInfo" parameterType="PlanInfoDto">
+		update plan_to_attraction_info
+		set content_id = #{contentId}
+		where plan_id = #{planId} and sequence = #{sequence}
+	</update>
+
+	<insert id="addPlanInfo" parameterType="PlanInfoDto">
+		insert into plan_to_attraction_info
+		(plan_id, content_id, sequence)
+		values(#{planId}, #{contentId}, #{sequence})
+	</insert>
+
+	<delete id="deletePlanInfo" parameterType="int">
+		delete
+		from plan_to_attraction_info
+		where plan_id = #{planId}
+	</delete>
+
+
+
+
+<!--	<select id="listByUserIdPlanId" parameterType="PlanDto" resultType="planDtoMap">-->
+<!--		select *-->
+<!--		from plan-->
+<!--		where user_id = #{userId} and-->
+<!--		plan_id = #{id}-->
+<!--	</select>-->
+
+
+
+</mapper>

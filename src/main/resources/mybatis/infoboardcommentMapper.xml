@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ssafy.enjoytrip.repository.infoboard.InfoBoardCommentRepository">
+   <resultMap id="infoBoardCommentMap" type="infoBoardCommentDto">
+      <result column="info_board_comment_id" property="id" jdbcType="INTEGER" javaType="int" />
+      <result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+      <result column="info_board_id" property="infoBoardId" jdbcType="INTEGER" javaType="int" />
+      <result column="register_date" property="registerDate" jdbcType="TIMESTAMP" javaType="String" />
+      <result column="content" property="content" jdbcType="VARCHAR" javaType="String" />
+   </resultMap>
+
+   <insert id="write" parameterType="infoBoardCommentDto">
+      insert into info_board_comment(user_id, info_board_id, content)
+      values(#{userId}, #{infoBoardId}, #{content})
+   </insert>
+   
+   <update id="modify" parameterType="infoBoardCommentDto">
+      update info_board_comment
+      set content=#{content}
+      where info_board_comment_id=#{id}
+   </update>
+
+   <delete id="delete" parameterType="int">
+      delete from info_board_comment 
+      where info_board_comment_id=#{id}
+   </delete>
+   
+   <delete id="deleteByPost" parameterType="int">
+   	  delete from info_board_comment 
+      where info_board_id=#{id}
+   </delete>
+   
+   <select id="list" parameterType="int" resultMap="infoBoardCommentMap">
+      select *
+      from info_board_comment
+      where info_board_id=#{boardId}
+      order by register_date desc;
+   </select>
+
+	<select id="totalCount" parameterType="int" resultType="int">
+		select count(info_board_comment_id)
+		from info_board_comment
+		where info_board_id=${id}
+	</select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+  <typeAliases>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.infoboard.InfoBoardDto" alias="infoBoardDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.infoboard.InfoBoardCommentDto" alias="infoBoardCommentDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.member.MemberDto" alias="memberDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.attraction.AttractionDto" alias="attractionDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.attraction.GugunDto" alias="gugunDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.attraction.SidoDto" alias="sidoDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.plan.PlanDto" alias="planDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.plan.PlanInfoDto" alias="planInfoDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.review.ReviewDto" alias="reviewDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.plan.PlanAttractionDto" alias="planAttractionDto"/>
+  </typeAliases>
+
+  <mappers>
+    <mapper resource="mybatis/infoboardMapper.xml"/>
+    <mapper resource="mybatis/infoboardcommentMapper.xml"/>
+    <mapper resource="mybatis/memberMapper.xml"/>
+    <mapper resource="mybatis/attractionMapper.xml"/>
+    <mapper resource="mybatis/planMapper.xml"/>
+  </mappers>
+
+</configuration>

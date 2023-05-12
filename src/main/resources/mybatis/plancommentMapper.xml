@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+		namespace="edu.ssafy.enjoytrip.repository.plan.PlanCommentRepository">
+	<resultMap id="planCommentDto" type="PlanCommentDto">
+		<result column="plan_comment_id" property="id" jdbcType="INTEGER" javaType="int" />
+		<result column="plan_id" property="planId" jdbcType="INTEGER" javaType="int" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+		<result column="register_date" property="registerDate" jdbcType="VARCHAR" javaType="String" />
+		<result column="content" property="content" jdbcType="VARCHAR" javaType="String" />
+	</resultMap>
+
+	<insert id="write" parameterType="planCommentDto">
+		insert into plan_comment(plan_id, user_id, content)
+		values(#{planId}, #{userId}, #{content})
+	</insert>
+
+	<update id="modify" parameterType="planCommentDto">
+		update plan_comment
+		set content=#{content}
+		where plan_comment_id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		delete from plan_comment
+		where plan_comment_id=#{id}
+	</delete>
+
+	<select id="select" resultMap="planCommentDto">
+		select *
+		from plan_comment
+		where plan_id=#{planId}
+	</select>
+
+
+
+</mapper>
