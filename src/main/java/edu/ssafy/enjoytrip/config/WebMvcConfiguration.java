@@ -13,15 +13,15 @@ import edu.ssafy.enjoytrip.interceptor.LoginInterceptor;
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-	private final List<String> patterns = Arrays.asList(
-				"/information/write", "/information/modify/*", "/information/delete/*", 
-				"/api/information/write", "/api/information/modify/*", "/api/information/delete/*");
-	
-	private LoginInterceptor loginInterceptor;
-	
-	public WebMvcConfiguration(LoginInterceptor loginInterceptor) {
-		this.loginInterceptor = loginInterceptor;
-	}
+//	private final List<String> patterns = Arrays.asList(
+//				"/information/write", "/information/modify/*", "/information/delete/*", 
+//				"/api/information/write", "/api/information/modify/*", "/api/information/delete/*");
+//	
+//	private LoginInterceptor loginInterceptor;
+//	
+//	public WebMvcConfiguration(LoginInterceptor loginInterceptor) {
+//		this.loginInterceptor = loginInterceptor;
+//	}
 	
 //	@Override
 //	public void addInterceptors(InterceptorRegistry registry) {

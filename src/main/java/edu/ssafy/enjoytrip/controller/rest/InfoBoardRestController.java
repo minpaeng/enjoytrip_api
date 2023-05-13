@@ -105,6 +105,7 @@ public class InfoBoardRestController {
 	public InfoBoardCommentPageDto comment(@PathVariable int infoBoardId) {
 		int pageCount = infoBoardCommentService.totalCount(infoBoardId) / SizeConstant.LIST_SIZE + 1;
 		List<InfoBoardCommentDto> list = infoBoardCommentService.list(infoBoardId);
+
 		return new InfoBoardCommentPageDto(pageCount, list);
 	}
 
