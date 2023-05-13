@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardCommentDto;
-import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardCommentPaeDto;
+import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardCommentPageDto;
 import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardDto;
 import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardPageDto;
 import edu.ssafy.enjoytrip.dto.member.MemberDto;
@@ -101,11 +101,11 @@ public class InfoBoardRestController {
 	}
 
 	// 특정 공지사항 게시글의 댓글 목록 조회
-	@GetMapping("/{infoBoardId}/comment")
-	public InfoBoardCommentPaeDto comment(@PathVariable int infoBoardId) {
+	@GetMapping("/comment/{infoBoardId}")
+	public InfoBoardCommentPageDto comment(@PathVariable int infoBoardId) {
 		int pageCount = infoBoardCommentService.totalCount(infoBoardId) / SizeConstant.LIST_SIZE + 1;
 		List<InfoBoardCommentDto> list = infoBoardCommentService.list(infoBoardId);
-		return new InfoBoardCommentPaeDto(pageCount, list);
+		return new InfoBoardCommentPageDto(pageCount, list);
 	}
 
 }
