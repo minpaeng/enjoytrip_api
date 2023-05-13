@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,8 +15,8 @@ import edu.ssafy.enjoytrip.dto.member.MemberDto;
 import edu.ssafy.enjoytrip.service.member.MemberService;
 import edu.ssafy.enjoytrip.util.SHA256;
 
-//@Controller
-//@RequestMapping("/member")
+@Controller
+@RequestMapping("/member")
 public class MemberController {
 	
 	private MemberService memberService;
