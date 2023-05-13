@@ -23,11 +23,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 		this.loginInterceptor = loginInterceptor;
 	}
 	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(loginInterceptor)
-				.addPathPatterns(patterns);
-	}
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(loginInterceptor)
+//				.addPathPatterns(patterns);
+//	}
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {

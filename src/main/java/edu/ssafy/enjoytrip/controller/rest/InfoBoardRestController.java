@@ -51,8 +51,9 @@ public class InfoBoardRestController {
 	@PostMapping("/write")
 	public ResponseEntity<String> write(@RequestBody Map<String, String> map, HttpSession session) {
 		try {
-			MemberDto memberDto = (MemberDto) session.getAttribute("userInfo");
-			String userId = memberDto.getUserId();
+//			MemberDto memberDto = (MemberDto) session.getAttribute("userInfo");
+//			String userId = memberDto.getUserId();
+			String userId = "ssafy";
 			InfoBoardDto infoBoardDto = new InfoBoardDto();
 
 			infoBoardDto.setUserId(userId);
