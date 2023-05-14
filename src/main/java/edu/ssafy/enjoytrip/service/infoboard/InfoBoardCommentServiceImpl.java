@@ -22,8 +22,8 @@ public class InfoBoardCommentServiceImpl implements InfoBoardCommentService {
 	}
 
 	@Override
-	public InfoBoardCommentDto modify(InfoBoardCommentDto infoBoardCommentDto) {
-		return infoBoardCommentRepository.modify(infoBoardCommentDto);
+	public void modify(InfoBoardCommentDto infoBoardCommentDto) {
+		infoBoardCommentRepository.modify(infoBoardCommentDto);
 	}
 
 	@Override

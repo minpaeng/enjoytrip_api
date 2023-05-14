@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,6 @@ import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardCommentDto;
 import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardCommentPageDto;
 import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardDto;
 import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardPageDto;
-import edu.ssafy.enjoytrip.dto.member.MemberDto;
 import edu.ssafy.enjoytrip.service.infoboard.InfoBoardCommentService;
 import edu.ssafy.enjoytrip.service.infoboard.InfoBoardService;
 import edu.ssafy.enjoytrip.util.SizeConstant;
@@ -101,12 +99,49 @@ public class InfoBoardRestController {
 	}
 
 	// 특정 공지사항 게시글의 댓글 목록 조회
-	@GetMapping("/comment/{infoBoardId}")
-	public InfoBoardCommentPageDto comment(@PathVariable int infoBoardId) {
+	@GetMapping("/{infoBoardId}/comment")
+	public InfoBoardCommentPageDto comment(@PathVariable int infoBoardId, 
+			@RequestParam(required = false, defaultValue = "1") int pgno) {
 		int pageCount = infoBoardCommentService.totalCount(infoBoardId) / SizeConstant.LIST_SIZE + 1;
 		List<InfoBoardCommentDto> list = infoBoardCommentService.list(infoBoardId);
 
 		return new InfoBoardCommentPageDto(pageCount, list);
+	}
+	
+	// 댓글 등록
+	@PostMapping("/{infoBoardId}/comment")
+	public ResponseEntity<String> createComment(@PathVariable int infoBoardId, 
+			@RequestBody InfoBoardCommentDto commentDto){
+		try {
+			commentDto.setUserId("ssafy"); // 로그인 구현하게 되면 주석처리
+			commentDto.setInfoBoardId(infoBoardId); // 로그인 구현하게 되면 주석처리
+			infoBoardCommentService.write(commentDto);
+			return new ResponseEntity<String>("공지사항 게시글 댓글 작성 성공", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("공지사항 게시글 댓글 작성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	// 댓글 수정
+	@PutMapping("/comment")
+	public ResponseEntity<String> updateComment(@RequestBody InfoBoardCommentDto commentDto){
+		try {
+			infoBoardCommentService.modify(commentDto);
+			return new ResponseEntity<String>("공지사항 게시글 댓글 수정 성공", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("공지사항 게시글 댓글 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	//댓글 삭제
+	@DeleteMapping("/comment/{commentId}")
+	public ResponseEntity<String> deleteComment(@PathVariable int commentId) {
+		try {
+			infoBoardCommentService.delete(commentId);
+			return new ResponseEntity<String>("공지사항 게시글 댓글 삭제 성공", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("공지사항 게시글 댓글 삭제 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

@@ -11,7 +11,7 @@ import edu.ssafy.enjoytrip.dto.infoboard.InfoBoardCommentDto;
 public interface InfoBoardCommentRepository {
 	
 	void write(InfoBoardCommentDto infoBoardCommentDto); // 댓글 작성
-	InfoBoardCommentDto modify(InfoBoardCommentDto infoBoardCommentDto); // 댓글 수정
+	void modify(InfoBoardCommentDto infoBoardCommentDto); // 댓글 수정
 	void delete(@Param("id") int infoBoardCommentId);
 	void deleteByPost(@Param("id") int infoBoardId);
 	List<InfoBoardCommentDto> list(@Param("boardId") int infoBoardId); 
