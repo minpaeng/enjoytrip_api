@@ -64,5 +64,11 @@
    		from members
    		where user_id=#{id}
    </select>
+   
+   <select id="findById" parameterType="String" resultType="memberDto">
+   	select *
+   	from members
+   	where user_id=#{id}
+   </select>
 
 </mapper>

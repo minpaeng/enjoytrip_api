@@ -19,5 +19,6 @@ public interface MemberRepository {
 	void update(MemberDto memberDto); //회원정보 수정	
 	void delete(@Param("id") String userId); //회원정보 삭제
 	char checkAdmin(@Param("id") String userId); // admin 여부 확인
+	MemberDto findById(@Param("id") String userId); // 아이디로 회원 조회
 	
 }
