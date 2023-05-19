@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.ssafy.enjoytrip.dto.BasicDto;
+import edu.ssafy.enjoytrip.dto.StatusEnum;
+
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
 	private static final ObjectMapper mapper = new ObjectMapper();
@@ -20,9 +23,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        String exception = (String)request.getAttribute("exception");
         setResponse(response);
-        BasicResponse exceptionDto = new BasicResponse(exception, HttpStatus.FORBIDDEN);
+        BasicDto exceptionDto = BasicDto.builder()
+        		.message("failed")
+        		.status(StatusEnum.BAD_REQUEST)
+        		.build();
         response.getWriter().print(convertObjectToJson(exceptionDto));
     }
 
