@@ -31,7 +31,7 @@ public class MemberRestController {
         
         return ResponseEntity.ok()
                 .header("Access-Token", token)
-                .body("로그인 되었습니다.");
+                .body("토큰 발급 완료");
     }
 
 }
