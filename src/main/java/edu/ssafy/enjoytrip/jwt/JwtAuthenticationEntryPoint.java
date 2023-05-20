@@ -25,8 +25,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint{
                          AuthenticationException authException) throws IOException {
         setResponse(response);
         BasicDto exceptionDto = BasicDto.builder()
-        		.message("failed")
-        		.status(StatusEnum.BAD_REQUEST)
+        		.message("forbidden")
+        		.status(StatusEnum.FORBIDDEN)
         		.build();
         response.getWriter().print(convertObjectToJson(exceptionDto));
     }

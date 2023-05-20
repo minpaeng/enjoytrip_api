@@ -24,8 +24,8 @@ public class JwtTokenProvider {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    // 토큰 유효시간 1시간
-    private long tokenValidTime = 60 * 60 * 1000L;
+    // 토큰 유효시간 2시간
+    private long tokenValidTime = 60 * 60 * 2000L;
 
     // 객체 초기화, secretKey를 Base64로 인코딩
     @PostConstruct
@@ -34,9 +34,9 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String userPk, String email) {
+    public String createToken(String userPk, String name) {
         Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위, 보통 여기서 user를 식별하는 값을 넣음
-        claims.put("email", email);
+        claims.put("name", name);
 
         Date now = new Date();
         return Jwts.builder()

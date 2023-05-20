@@ -28,7 +28,7 @@ public class SecurityConfig {
 		.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 //		.antMatchers("/**").permitAll()
 		.antMatchers(HttpMethod.GET,"/api/information/**", "/attraction/**").permitAll()
-        .antMatchers("/api/member/login").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/member/login", "/api/member/join").permitAll()
         .antMatchers("/", "/images/**").permitAll()
         .anyRequest().authenticated()
         .and()

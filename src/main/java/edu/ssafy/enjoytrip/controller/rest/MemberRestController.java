@@ -5,6 +5,8 @@ import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +37,7 @@ public class MemberRestController {
 		
 		try {
 			MemberDto memberDto = memberService.loginMember(userId, sha256.SHA(userPwd));
-	        String token = jwtTokenProvider.createToken(memberDto.getUserId(), memberDto.getEmailId());
+	        String token = jwtTokenProvider.createToken(memberDto.getUserId(), memberDto.getUserName());
 	        
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.add("access-token", token);
@@ -55,5 +57,53 @@ public class MemberRestController {
 			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 		}
     }
+	
+	@PostMapping("/join")
+    public ResponseEntity<BasicDto> join(@RequestBody MemberDto dto) {
+		BasicDto response;
+		try {
+			dto.setUserPassword(sha256.SHA(dto.getUserPassword()));
+			memberService.joinMember(dto);
+
+	        response = BasicDto.builder()
+	        		.status(StatusEnum.OK)
+	        		.message("success")
+	        		.build();
+	        
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			response = BasicDto.builder()
+					.status(StatusEnum.BAD_REQUEST)
+					.message("failed")
+					.build();
+			
+			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+		}
+    }
+	
+	@GetMapping("/info/{userId}")
+	public ResponseEntity<BasicDto> getUserInfo(@PathVariable String userId) {
+		MemberDto memberDto = memberService.select(userId);
+		BasicDto response = BasicDto.builder()
+		.status(StatusEnum.OK)
+		.message("success")
+		.data(memberDto)
+		.build();
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/logout/{userId}")
+	public ResponseEntity<BasicDto> logout(@PathVariable String userId) {
+		MemberDto memberDto = memberService.select(userId);
+		System.out.println(memberDto);
+		BasicDto response = BasicDto.builder()
+		.status(StatusEnum.OK)
+		.message("success")
+		.data(memberDto.getUserId())
+		.build();
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 }
