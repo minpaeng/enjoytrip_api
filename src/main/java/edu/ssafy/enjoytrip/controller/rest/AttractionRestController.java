@@ -1,6 +1,5 @@
 package edu.ssafy.enjoytrip.controller.rest;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,31 +84,31 @@ public class AttractionRestController {
 
 	@PostMapping("/rest")
 	public ResponseEntity<Map<String, Object>> makePlan(@RequestBody Map<String, Object> map) {
-
-		PlanDto planDto = new PlanDto();
-		planDto.setUserId((String) map.get("userId"));
-		planDto.setStartDate((String) map.get("startDate"));
-		planDto.setEndDate((String) map.get("endDate"));
-		planDto.setTitle((String) map.get("title"));
-		planDto.setMemo((String) map.get("memo"));
-		planDto.setShare((String) map.get("share"));
-
-		List<String> contentId = (List<String>) map.get("contentId");
-
 		try {
+			PlanDto planDto = new PlanDto();
+			planDto.setUserId((String) map.get("userId"));
+			planDto.setStartDate((String) map.get("startDate"));
+			planDto.setEndDate((String) map.get("endDate"));
+			planDto.setTitle((String) map.get("title"));
+			planDto.setMemo((String) map.get("memo"));
+			planDto.setShare((String) map.get("share"));
+			System.out.println(planDto);
 			attractionService.makePlan(planDto);
 			int planId = attractionService.getPlanId((String) map.get("userId"));
+			
 			int idx = 1;
-			for (String id : contentId) {
+			List<Integer> contentIds = (List<Integer>) map.get("contentIds");
+			for (Integer id : contentIds) {
 				PlanInfoDto planInfoDto = new PlanInfoDto();
 				planInfoDto.setPlanId(planId);
-				planInfoDto.setContentId(Integer.parseInt(id));
+				planInfoDto.setContentId(id);
 				planInfoDto.setSequence(idx++);
 				System.out.println(planInfoDto);
 				attractionService.planInfo(planInfoDto);
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
 		}catch (Exception e){
+			System.out.println(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

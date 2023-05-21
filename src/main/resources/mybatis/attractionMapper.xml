@@ -48,7 +48,7 @@
 	<resultMap id="planInfoDtoMap" type="PlanInfoDto">
 		<result column="plan_id" property="planId" jdbcType="INTEGER" javaType="int" />
 		<result column="content_id" property="contentId" jdbcType="INTEGER" javaType="int" />
-		<result column="sequence" property="sequence" jdbcType="INTEGER" javaType="int" />
+		<result column="order" property="sequence" jdbcType="INTEGER" javaType="int" />
 	</resultMap>
 	
 	
@@ -93,7 +93,6 @@
 	
 	<insert id="planInfo" parameterType="PlanInfoDto">
 		insert into plan_to_attraction_info
-		(plan_id, content_id, sequence)
 		values(#{planId}, #{contentId}, #{sequence})
 	</insert>
 	
