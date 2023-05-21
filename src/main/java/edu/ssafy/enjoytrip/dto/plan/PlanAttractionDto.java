@@ -1,12 +1,24 @@
 package edu.ssafy.enjoytrip.dto.plan;
 
 import edu.ssafy.enjoytrip.dto.attraction.AttractionDto;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
-public class PlanAttractionDto {
-    PlanDto planDto;
-    List<AttractionDto> attractionDtoList;
+@Setter
+@Getter
+public class PlanAttractionDto extends PlanDto{
+    List<AttractionDto> attractionList;
+    
+    public void setPlan(PlanDto planDto) {
+    	this.id = planDto.id;
+		this.userId = planDto.userId;
+		this.startDate = planDto.startDate;
+		this.endDate = planDto.endDate;
+		this.memo = planDto.memo;
+		this.title = planDto.title;
+		this.registerDate = planDto.registerDate;
+		this.share = planDto.share;
+    }
 }

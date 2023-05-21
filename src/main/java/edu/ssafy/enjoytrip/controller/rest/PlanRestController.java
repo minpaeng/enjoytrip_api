@@ -1,5 +1,7 @@
 package edu.ssafy.enjoytrip.controller.rest;
 
+import edu.ssafy.enjoytrip.dto.BasicDto;
+import edu.ssafy.enjoytrip.dto.StatusEnum;
 import edu.ssafy.enjoytrip.dto.attraction.AttractionDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanAttractionDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanDto;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/plan")
+@RequestMapping("/api/plan")
 public class PlanRestController {
 
 	private PlanService planService;
@@ -24,18 +26,19 @@ public class PlanRestController {
 	public PlanRestController(PlanService planService) {
 		this.planService = planService;
 	}
-	@GetMapping("/rest")
-	// 페이징 처리를 어떻게 해야할지 모르겠습니다 ㅠ.ㅠ
-	// 최근에 등록된 여행 계획 10개 조회
-	public ResponseEntity<Map<String, Object>> list(){
-
-		Map<String , Object> map = new HashMap<>();
+	
+	// 여행 계획 목록 조회
+	@GetMapping("/shareboard")
+	public ResponseEntity<BasicDto> list(){
+		BasicDto response;
 		List<PlanAttractionDto> reslist = new ArrayList<>();
+		
 		try {
+			
 			List<PlanDto> list = planService.list();
 			for (PlanDto planDto : list) {
 				PlanAttractionDto planAttractionDto = new PlanAttractionDto();
-				planAttractionDto.setPlanDto(planDto);
+				planAttractionDto.setPlan(planDto);
 				int id = planDto.getId();
 				List<Integer> contentId = planService.selectContentId(id);
 				List<AttractionDto> attractionList = new ArrayList<>();
@@ -43,27 +46,37 @@ public class PlanRestController {
 					AttractionDto attractionDto = planService.selectAttraction(content);
 					attractionList.add(attractionDto);
 				}
-				planAttractionDto.setAttractionDtoList(attractionList);
+				planAttractionDto.setAttractionList(attractionList);
 				reslist.add(planAttractionDto);
 			}
-			map.put("reslist", reslist);
-			return new ResponseEntity<>(map, HttpStatus.OK);
+			
+			response = BasicDto.builder()
+					.status(StatusEnum.OK)
+					.message("success")
+					.data(reslist)
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}catch (Exception e){
 			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			response = BasicDto.builder()
+					.status(StatusEnum.INTERNAL_SERER_ERROR)
+					.message("failed")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 
+	// 특정 사용자의 여행 계획 목록 조회
 	@GetMapping("/rest/{userId}")
-	public ResponseEntity<Map<String, Object>> list(@PathVariable("userId") String userId){
-		Map<String, Object> map = new HashMap<>();
+	public ResponseEntity<BasicDto> list(@PathVariable("userId") String userId){
+		BasicDto response;
 		List<PlanAttractionDto> reslist = new ArrayList<>();
 		try{
 			List<PlanDto> planDtoList = planService.listByUserId(userId);
 			for (PlanDto planDto : planDtoList) {
 				PlanAttractionDto planAttractionDto = new PlanAttractionDto();
-				planAttractionDto.setPlanDto(planDto);
+				planAttractionDto.setPlan(planDto);
 				int id = planDto.getId();
 				List<Integer> contentId = planService.selectContentId(id);
 				List<AttractionDto> attractionList = new ArrayList<>();
@@ -71,22 +84,33 @@ public class PlanRestController {
 					AttractionDto attractionDto = planService.selectAttraction(content);
 					attractionList.add(attractionDto);
 				}
-				planAttractionDto.setAttractionDtoList(attractionList);
+				planAttractionDto.setAttractionList(attractionList);
 				reslist.add(planAttractionDto);
 			}
-			map.put("reslist", reslist);
-			return new ResponseEntity<>(map, HttpStatus.OK);
+			
+			response = BasicDto.builder()
+					.status(StatusEnum.OK)
+					.message("success")
+					.data(reslist)
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}catch (Exception e){
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			response = BasicDto.builder()
+					.status(StatusEnum.INTERNAL_SERER_ERROR)
+					.message("failed")
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	// 플랜 아이디로 계획 조회
 	@GetMapping("/rest/planId/{planId}")
 	public ResponseEntity<Map<String , Object>> select(@PathVariable("planId") int id){
 		Map<String, Object> map = new HashMap<>();
 		PlanAttractionDto planAttractionDto = new PlanAttractionDto();
 		try{
 			PlanDto planDto = planService.select(id);
-			planAttractionDto.setPlanDto(planDto);
+			planAttractionDto.setPlan(planDto);
 			int planId = planDto.getId();
 			List<Integer> contentId = planService.selectContentId(planId);
 			List<AttractionDto> attractionList = new ArrayList<>();
@@ -94,7 +118,7 @@ public class PlanRestController {
 				AttractionDto attractionDto = planService.selectAttraction(content);
 				attractionList.add(attractionDto);
 			}
-			planAttractionDto.setAttractionDtoList(attractionList);
+			planAttractionDto.setAttractionList(attractionList);
 			map.put("planAttractionDto", planAttractionDto);
 			return new ResponseEntity<>(map, HttpStatus.OK);
 		}catch (Exception e){
@@ -147,6 +171,7 @@ public class PlanRestController {
 		}
 	}
 
+	// 후기 작성
 	@PostMapping("/rest")
 	public ResponseEntity<Map<String, Object>> write(@RequestBody Map<String,Object> map){
 

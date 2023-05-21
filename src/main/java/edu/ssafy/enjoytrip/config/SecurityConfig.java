@@ -26,7 +26,7 @@ public class SecurityConfig {
 		.formLogin().disable()
 		.authorizeRequests()
 		.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-//		.antMatchers("/**").permitAll()
+		.antMatchers("/**").permitAll()
 		.antMatchers(HttpMethod.GET,"/api/information/**", "/attraction/**").permitAll()
         .antMatchers(HttpMethod.POST, "/api/member/login", "/api/member/join").permitAll()
         .antMatchers("/", "/images/**").permitAll()

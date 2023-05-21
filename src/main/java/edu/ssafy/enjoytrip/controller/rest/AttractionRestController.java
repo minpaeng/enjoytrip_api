@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.ssafy.enjoytrip.dto.BasicDto;
+import edu.ssafy.enjoytrip.dto.StatusEnum;
 import edu.ssafy.enjoytrip.dto.attraction.AttractionDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanInfoDto;
 import org.springframework.http.HttpStatus;
@@ -83,7 +85,9 @@ public class AttractionRestController {
 	}
 
 	@PostMapping("/rest")
-	public ResponseEntity<Map<String, Object>> makePlan(@RequestBody Map<String, Object> map) {
+	public ResponseEntity<BasicDto> makePlan(@RequestBody Map<String, Object> map) {
+		BasicDto response;
+		
 		try {
 			PlanDto planDto = new PlanDto();
 			planDto.setUserId((String) map.get("userId"));
@@ -92,7 +96,6 @@ public class AttractionRestController {
 			planDto.setTitle((String) map.get("title"));
 			planDto.setMemo((String) map.get("memo"));
 			planDto.setShare((String) map.get("share"));
-			System.out.println(planDto);
 			attractionService.makePlan(planDto);
 			int planId = attractionService.getPlanId((String) map.get("userId"));
 			
@@ -103,13 +106,23 @@ public class AttractionRestController {
 				planInfoDto.setPlanId(planId);
 				planInfoDto.setContentId(id);
 				planInfoDto.setSequence(idx++);
-				System.out.println(planInfoDto);
 				attractionService.planInfo(planInfoDto);
 			}
-			return new ResponseEntity<>(HttpStatus.OK);
+			
+			response = BasicDto.builder()
+					.status(StatusEnum.OK)
+					.message("플랜 생성 완료")
+					.data(planDto)
+					.build();
+			
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}catch (Exception e){
-			System.out.println(e.getMessage());
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			response = BasicDto.builder()
+					.status(StatusEnum.INTERNAL_SERER_ERROR)
+					.message("플랜 생성 실패")
+					.data(e.getMessage())
+					.build();
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
