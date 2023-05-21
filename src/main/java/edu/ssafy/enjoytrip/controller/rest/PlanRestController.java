@@ -4,9 +4,11 @@ import edu.ssafy.enjoytrip.dto.BasicDto;
 import edu.ssafy.enjoytrip.dto.StatusEnum;
 import edu.ssafy.enjoytrip.dto.attraction.AttractionDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanAttractionDto;
+import edu.ssafy.enjoytrip.dto.plan.PlanAttractionResponseDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import edu.ssafy.enjoytrip.service.plan.PlanService;
+import edu.ssafy.enjoytrip.util.SizeConstant;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
@@ -71,35 +73,23 @@ public class PlanRestController {
 
 	// 특정 사용자의 여행 계획 목록 조회
 	@GetMapping("/rest/{userId}")
-	public ResponseEntity<BasicDto> list(@PathVariable("userId") String userId){
+	public ResponseEntity<BasicDto> list(@PathVariable("userId") String userId, 
+			@RequestParam(required = false, defaultValue = "1") int pgno){
 		BasicDto response;
-		List<PlanAttractionDto> reslist = new ArrayList<>();
 		try{
-			List<PlanDto> planDtoList = planService.listByUserId(userId);
-			for (PlanDto planDto : planDtoList) {
-				PlanAttractionDto planAttractionDto = new PlanAttractionDto();
-				planAttractionDto.setPlan(planDto);
-				int id = planDto.getId();
-				List<Integer> contentId = planService.selectContentId(id);
-				List<AttractionDto> attractionList = new ArrayList<>();
-				for (Integer content : contentId) {
-					AttractionDto attractionDto = planService.selectAttraction(content);
-					attractionList.add(attractionDto);
-				}
-				planAttractionDto.setAttractionList(attractionList);
-				reslist.add(planAttractionDto);
-			}
+			PlanAttractionResponseDto res = planService.listByUserId(userId, pgno - 1, SizeConstant.LIST_SIZE);
 			
 			response = BasicDto.builder()
 					.status(StatusEnum.OK)
 					.message("success")
-					.data(reslist)
+					.data(res)
 					.build();
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}catch (Exception e){
 			response = BasicDto.builder()
 					.status(StatusEnum.INTERNAL_SERER_ERROR)
 					.message("failed")
+					.data(e.getMessage())
 					.build();
 			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

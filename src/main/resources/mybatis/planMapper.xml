@@ -58,11 +58,18 @@ namespace="edu.ssafy.enjoytrip.repository.plan.PlanRepository">
 		order by register_time desc limit 10
 	</select>
 
-	<select id="listByUserId" parameterType="String" resultMap="planDtoMap">
+	<select id="listByUserId" resultMap="planDtoMap">
 		select *
 		from plan
 		where user_id = #{userId}
-		order by register_time desc limit 10
+		order by register_time desc
+		limit #{offset}, #{size}
+	</select>
+	
+	<select id="totalListCountByUserId" resultType="int">
+		select count(plan_id)
+		from plan
+		where user_id = #{userId}
 	</select>
 
 	<select id="select" parameterType="int" resultMap="planDtoMap">

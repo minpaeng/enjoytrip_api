@@ -41,7 +41,9 @@ public class InfoBoardRestController {
 	@GetMapping("/list")
 	public InfoBoardPageDto list(@RequestParam Map<String, String> map) {
 		List<InfoBoardDto> boardList = infoBoardService.list(map);
-		int pageCount = infoBoardService.totalCount(map) / SizeConstant.LIST_SIZE + 1;
+		int pageCount = infoBoardService.totalCount(map);
+		if ((pageCount != 0) && (pageCount % SizeConstant.LIST_SIZE == 0)) pageCount /= SizeConstant.LIST_SIZE;
+		else pageCount = pageCount / SizeConstant.LIST_SIZE + 1;
 		return new InfoBoardPageDto(pageCount, boardList);
 	}
 

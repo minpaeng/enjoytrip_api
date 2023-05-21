@@ -1,6 +1,8 @@
 package edu.ssafy.enjoytrip.service.plan;
 
 import edu.ssafy.enjoytrip.dto.attraction.AttractionDto;
+import edu.ssafy.enjoytrip.dto.plan.PlanAttractionDto;
+import edu.ssafy.enjoytrip.dto.plan.PlanAttractionResponseDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanInfoDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewDto;
@@ -8,6 +10,7 @@ import edu.ssafy.enjoytrip.repository.plan.PlanRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,8 +48,34 @@ public class PlanServiceImpl implements PlanService{
     }
 
     @Override
-    public List<PlanDto> listByUserId(String userId) {
-        return planRepository.listByUserId(userId);
+    public PlanAttractionResponseDto listByUserId(String userId, int offset, int size) {
+    	List<PlanAttractionDto> plans = new ArrayList<>();
+    	List<PlanDto> planDtoList = planRepository.listByUserId(userId, offset * size, size);
+    	
+    	for (PlanDto planDto : planDtoList) {
+			PlanAttractionDto planAttractionDto = new PlanAttractionDto();
+			planAttractionDto.setPlan(planDto);
+			
+			int id = planDto.getId();
+			List<Integer> contentId = planRepository.selectContentId(id);
+			List<AttractionDto> attractionList = new ArrayList<>();
+			for (Integer content : contentId) {
+				AttractionDto attractionDto = planRepository.selectAttraction(content);
+				attractionList.add(attractionDto);
+			}
+			
+			planAttractionDto.setAttractionList(attractionList);
+			plans.add(planAttractionDto);
+		}
+    	
+    	int totalCount = planRepository.totalListCountByUserId(userId);
+		if ((totalCount != 0) && (totalCount % size == 0)) totalCount /= size;
+		else totalCount = totalCount / size + 1;
+		
+		return PlanAttractionResponseDto.builder()
+				.totalCount(totalCount)
+				.plans(plans)
+				.build();
     }
 
 //    @Override
