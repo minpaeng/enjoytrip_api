@@ -15,7 +15,7 @@ public interface PlanRepository {
 	void modify(PlanDto planDto); // 게시글 수정
 	PlanDto select(int planId); // 단건 조회
 	List<PlanDto> list(); // 목록 조회
-	List<PlanDto> listByUserId(String userId); // 특정 사용자 여행 계획 조회(전체)
+	List<PlanDto> listByUserId(String userId, int offset, int size); // 특정 사용자 여행 계획 조회(전체)
 //	List<PlanDto> listByUserIdPlanId(PlanDto planDto); // 다른 사용자의 특정 여행 계획 조회
 	void delete(int PlanId); // 게시긇 삭제
 	void write(ReviewDto reviewDto); // 후기 작성
@@ -25,7 +25,8 @@ public interface PlanRepository {
 	int topSequence(int planId);
 	void addPlanInfo(PlanInfoDto planInfoDto);
 	void deletePlanInfo(int planId);
-
+	void changeShareMode(int planId, char share);
+	int totalListCountByUserId(String userId);
 
 //	void updateLike(String reievewId, String userId); // 좋아요
 //	void deleteLike(String reievewId, String userId); // 좋아요 취소

@@ -52,18 +52,24 @@ namespace="edu.ssafy.enjoytrip.repository.plan.PlanRepository">
 	</resultMap>
 
 
-
 	<select id="list" resultMap="planDtoMap">
 		select *
 		from plan
 		order by register_time desc limit 10
 	</select>
 
-	<select id="listByUserId" parameterType="String" resultMap="planDtoMap">
+	<select id="listByUserId" resultMap="planDtoMap">
 		select *
 		from plan
 		where user_id = #{userId}
-		order by register_time desc limit 10
+		order by register_time desc
+		limit #{offset}, #{size}
+	</select>
+	
+	<select id="totalListCountByUserId" resultType="int">
+		select count(plan_id)
+		from plan
+		where user_id = #{userId}
 	</select>
 
 	<select id="select" parameterType="int" resultMap="planDtoMap">
@@ -71,30 +77,8 @@ namespace="edu.ssafy.enjoytrip.repository.plan.PlanRepository">
 		from plan
 		where plan_id = #{id}
 	</select>
-
-	<update id="modify" parameterType="PlanDto">
-		update plan
-		set start_date = #{startDate},
-		end_date = #{endDate},
-		memo = #{memo},
-		plan_title = #{title},
-		share = #{share}
-		where plan_id = #{id}
-	</update>
-
-	<delete id="delete" parameterType="PlanDto">
-		delete
-		from plan
-		where plan_id = #{id}
-	</delete>
-
-	<insert id="write" parameterType="ReviewDto">
-		insert into review
-		(user_id, plan_id, title, content)
-		values(#{userId},#{planId},#{title},#{content})
-	</insert>
-
-	<select id="selectContentId" parameterType="int" resultType="int">
+	
+		<select id="selectContentId" parameterType="int" resultType="int">
 		select content_id
 		from plan_to_attraction_info
 		where plan_id = #{id}
@@ -113,27 +97,60 @@ namespace="edu.ssafy.enjoytrip.repository.plan.PlanRepository">
 		where plan_id = #{planId}
 		order by sequence desc limit 1
 	</select>
+	
+	<select id="selectSharedPlanList" resultMap="planDtoMap">
+		select *
+		from plan
+		where share='Y'
+		order by register_time desc
+		limit #{offset}, #{size}
+	</select>
 
-	<update id="planInfo" parameterType="PlanInfoDto">
-		update plan_to_attraction_info
-		set content_id = #{contentId}
-		where plan_id = #{planId} and sequence = #{sequence}
+	<update id="modify" parameterType="PlanDto">
+		update plan
+		set start_date = #{startDate},
+		end_date = #{endDate},
+		memo = #{memo},
+		plan_title = #{title},
+		share = #{share}
+		where plan_id = #{id}
 	</update>
 
+	<insert id="write" parameterType="ReviewDto">
+		insert into review
+		(user_id, plan_id, title, content)
+		values(#{userId},#{planId},#{title},#{content})
+	</insert>
+	
 	<insert id="addPlanInfo" parameterType="PlanInfoDto">
 		insert into plan_to_attraction_info
 		(plan_id, content_id, sequence)
 		values(#{planId}, #{contentId}, #{sequence})
 	</insert>
 
+	<update id="planInfo" parameterType="PlanInfoDto">
+		update plan_to_attraction_info
+		set content_id = #{contentId}
+		where plan_id = #{planId} and sequence = #{sequence}
+	</update>
+	
+	<update id="changeShareMode">
+		update plan
+		set share = #{share}
+		where plan_id = #{planId}
+	</update>
+	
+	<delete id="delete" parameterType="PlanDto">
+		delete
+		from plan
+		where plan_id = #{id}
+	</delete>
+	
 	<delete id="deletePlanInfo" parameterType="int">
 		delete
 		from plan_to_attraction_info
 		where plan_id = #{planId}
 	</delete>
-
-
-
 
 <!--	<select id="listByUserIdPlanId" parameterType="PlanDto" resultType="planDtoMap">-->
 <!--		select *-->
