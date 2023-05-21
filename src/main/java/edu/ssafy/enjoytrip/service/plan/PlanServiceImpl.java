@@ -6,19 +6,32 @@ import edu.ssafy.enjoytrip.dto.plan.PlanInfoDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import edu.ssafy.enjoytrip.repository.plan.PlanRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class PlanServiceImpl implements PlanService{
     PlanRepository planRepository;
+    
     public PlanServiceImpl(PlanRepository planRepository) {
         this.planRepository = planRepository;
     }
 
     @Override
-    public void modify(PlanDto planDto) {
+    @Transactional
+    public void modify(PlanDto planDto, List<Integer> contentIds) {
         planRepository.modify(planDto);
+        planRepository.deletePlanInfo(planDto.getId());
+        
+        int idx = 1;
+		for (Integer id : contentIds) {
+			PlanInfoDto planInfoDto = new PlanInfoDto();
+			planInfoDto.setPlanId(planDto.getId());
+			planInfoDto.setContentId(id);
+			planInfoDto.setSequence(idx);
+			planRepository.addPlanInfo(planInfoDto);
+		}
     }
 
     @Override
@@ -80,6 +93,12 @@ public class PlanServiceImpl implements PlanService{
     public void deletePlanInfo(int planId) {
         planRepository.deletePlanInfo(planId);
     }
+
+	@Override
+	public void changeShareMode(int planId, char share) {
+		planRepository.changeShareMode(planId, share);
+		
+	}
 
 
 //    @Override

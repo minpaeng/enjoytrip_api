@@ -25,6 +25,7 @@ public interface PlanRepository {
 	int topSequence(int planId);
 	void addPlanInfo(PlanInfoDto planInfoDto);
 	void deletePlanInfo(int planId);
+	void changeShareMode(int planId, char share);
 
 
 //	void updateLike(String reievewId, String userId); // 좋아요

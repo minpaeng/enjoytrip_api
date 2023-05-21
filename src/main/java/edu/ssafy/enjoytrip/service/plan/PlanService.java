@@ -8,7 +8,7 @@ import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import java.util.List;
 
 public interface PlanService {
-    void modify(PlanDto planDto); // 게시글 수정
+    void modify(PlanDto planDto, List<Integer> contentIds); // 게시글 수정
     PlanDto select(int planId); // 단건 조회
     List<PlanDto> list(); // 목록 조회
     List<PlanDto> listByUserId(String userId); // 특정 사용자 여행 계획 조회(전체)
@@ -24,4 +24,5 @@ public interface PlanService {
     int topSequence(int planId);
     void addPlanInfo(PlanInfoDto planInfoDto);
     void deletePlanInfo(int planId);
+    void changeShareMode(int planId, char share);
 }
