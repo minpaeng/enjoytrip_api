@@ -12,10 +12,14 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.ssafy.enjoytrip.dto.file.FileDto;
+import edu.ssafy.enjoytrip.dto.file.ReviewFileDto;
 import edu.ssafy.enjoytrip.dto.member.MemberDto;
+import edu.ssafy.enjoytrip.repository.file.ReviewFileRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class FileHandler {
 	@Value("${file.path.review}")
@@ -23,9 +27,11 @@ public class FileHandler {
 
 	@Value("${file.path.profile}")
 	private String profilePath;
+	
+	private final ReviewFileRepository reviewFileRepository;
 
 	// review에 등록할 사진 파일 저장
-	public void parseFileInfo(List<MultipartFile> multipartFiles) {
+	public void parseFileInfo(List<MultipartFile> multipartFiles, int reviewId) {
 		// 파일이 첨부된 경우
 		if (!CollectionUtils.isEmpty(multipartFiles)) {
 			// 파일명을 업로드 한 날짜로 변환하여 저장
@@ -58,6 +64,13 @@ public class FileHandler {
 				log.info("저장될 파일 경로: " + path + "/" + new_file_name);
 				try {
 					multipartFile.transferTo(file);
+					
+					//DB에 파일 정보 저장
+					ReviewFileDto fileDto = new ReviewFileDto();
+					fileDto.setReviewId(reviewId);
+					fileDto.setName(file.getName());
+					fileDto.setPath(file.getAbsolutePath());
+					reviewFileRepository.saveFile(fileDto);
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}

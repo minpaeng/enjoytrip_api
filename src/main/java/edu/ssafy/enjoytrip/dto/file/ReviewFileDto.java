@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FileDto {
-	private String name;
-	private String path;
+public class ReviewFileDto extends FileDto {
+	private int reviewId;
+	private int fid;
 }

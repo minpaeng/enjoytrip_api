@@ -2,12 +2,25 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="edu.ssafy.enjoytrip.repository.file.FileRepository">
-   <resultMap id="fileMap" type="fileDto">
+<mapper namespace="edu.ssafy.enjoytrip.repository.file.ReviewFileRepository">
+   <resultMap id="fileMap" type="reviewFileDto">
+   <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="int" />
       <result column="fid" property="fid" jdbcType="INTEGER" javaType="int" />
       <result column="name" property="name" jdbcType="VARCHAR" javaType="String" />
       <result column="path" property="path" jdbcType="VARCHAR" javaType="String" />
    </resultMap>
+   
+   <select id="selectFileByFid" resultType="Integer">
+   		select *
+   		from files
+   		where pid=#{pid}
+   </select>
+   
+   <select id="selectFileByReviewId" resultMap="fileMap">
+   		select *
+   		from files
+   		where review_id=#{reviewId}
+   </select>
    
    <select id="selectFile" resultType="Integer">
    		select *
@@ -15,7 +28,7 @@
    		where pid=#{pid}
    </select>
    
-   <insert id="saveFile" parameterType="fileDto">
+   <insert id="saveFile" parameterType="reviewFileDto">
    		insert into members(name, path)
    		values (#{name}, #{path})
    </insert>

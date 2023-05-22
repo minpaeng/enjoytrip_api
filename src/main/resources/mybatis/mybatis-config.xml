@@ -15,7 +15,7 @@
      <typeAlias type="edu.ssafy.enjoytrip.dto.plan.PlanInfoDto" alias="planInfoDto"/>
      <typeAlias type="edu.ssafy.enjoytrip.dto.review.ReviewDto" alias="reviewDto"/>
      <typeAlias type="edu.ssafy.enjoytrip.dto.plan.PlanAttractionDto" alias="planAttractionDto"/>
-     <typeAlias type="edu.ssafy.enjoytrip.dto.file.FileDto" alias="fileDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.file.ReviewFileDto" alias="reviewFileDto"/>
   </typeAliases>
 
   <mappers>
@@ -24,7 +24,7 @@
     <mapper resource="mybatis/memberMapper.xml"/>
     <mapper resource="mybatis/attractionMapper.xml"/>
     <mapper resource="mybatis/planMapper.xml"/>
-    <mapper resource="mybatis/fileMapper.xml"/>
+    <mapper resource="mybatis/reviewFileMapper.xml"/>
   </mappers>
 
 </configuration>
