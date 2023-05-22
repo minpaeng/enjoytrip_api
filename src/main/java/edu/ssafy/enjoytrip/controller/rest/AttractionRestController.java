@@ -4,17 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.ssafy.enjoytrip.dto.BasicDto;
-import edu.ssafy.enjoytrip.dto.StatusEnum;
 import edu.ssafy.enjoytrip.dto.attraction.AttractionDto;
-import edu.ssafy.enjoytrip.dto.plan.PlanInfoDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import edu.ssafy.enjoytrip.dto.attraction.GugunDto;
 import edu.ssafy.enjoytrip.dto.attraction.SidoDto;
-import edu.ssafy.enjoytrip.dto.plan.PlanDto;
 import edu.ssafy.enjoytrip.service.attraction.AttractionService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,37 +64,6 @@ public class AttractionRestController {
 		AttractionDto attractionDto = attractionService.selectByContentId(contentId);
 		map.put("attractionDto", attractionDto);
 		return new ResponseEntity<>(map, HttpStatus.OK);
-	}
-
-	@PostMapping("/rest")
-	public ResponseEntity<BasicDto> makePlan(@RequestBody Map<String, Object> map) {
-		PlanDto planDto = new PlanDto();
-		planDto.setUserId((String) map.get("userId"));
-		planDto.setStartDate((String) map.get("startDate"));
-		planDto.setEndDate((String) map.get("endDate"));
-		planDto.setTitle((String) map.get("title"));
-		planDto.setMemo((String) map.get("memo"));
-		planDto.setShare((String) map.get("share"));
-		attractionService.makePlan(planDto);
-		int planId = attractionService.getPlanId((String) map.get("userId"));
-		
-		int idx = 1;
-		List<Integer> contentIds = (List<Integer>) map.get("contentIds");
-		for (Integer id : contentIds) {
-			PlanInfoDto planInfoDto = new PlanInfoDto();
-			planInfoDto.setPlanId(planId);
-			planInfoDto.setContentId(id);
-			planInfoDto.setSequence(idx++);
-			attractionService.planInfo(planInfoDto);
-		}
-		
-		BasicDto response = BasicDto.builder()
-				.status(StatusEnum.OK)
-				.message("플랜 생성 완료")
-				.data(planDto)
-				.build();
-		
-		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }

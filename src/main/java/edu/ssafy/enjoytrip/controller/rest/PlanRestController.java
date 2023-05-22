@@ -6,9 +6,11 @@ import edu.ssafy.enjoytrip.dto.attraction.AttractionDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanAttractionDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanAttractionResponseDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanDto;
-import edu.ssafy.enjoytrip.dto.review.ReviewDto;
+import edu.ssafy.enjoytrip.dto.plan.PlanInfoDto;
+import edu.ssafy.enjoytrip.service.attraction.AttractionService;
 import edu.ssafy.enjoytrip.service.plan.PlanService;
 import edu.ssafy.enjoytrip.util.SizeConstant;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/plan")
 public class PlanRestController {
 
-	private PlanService planService;
-
-	public PlanRestController(PlanService planService) {
-		this.planService = planService;
-	}
+	private final PlanService planService;
+	private final AttractionService attractionService;
 	
 	// 여행 계획 목록 조회
 	@GetMapping("/shareboard")
@@ -59,7 +59,7 @@ public class PlanRestController {
 
 
 	// 특정 사용자의 여행 계획 목록 조회
-	@GetMapping("/rest/{userId}")
+	@GetMapping("/rest/{userId}") 
 	public ResponseEntity<BasicDto> list(@PathVariable("userId") String userId, 
 			@RequestParam(required = false, defaultValue = "1") int pgno){
 
@@ -94,6 +94,38 @@ public class PlanRestController {
 		
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
+	
+	// 플랜 작성
+	@PostMapping("/rest")
+	public ResponseEntity<BasicDto> makePlan(@RequestBody Map<String, Object> map) {
+		PlanDto planDto = new PlanDto();
+		planDto.setUserId((String) map.get("userId"));
+		planDto.setStartDate((String) map.get("startDate"));
+		planDto.setEndDate((String) map.get("endDate"));
+		planDto.setTitle((String) map.get("title"));
+		planDto.setMemo((String) map.get("memo"));
+		planDto.setShare((String) map.get("share"));
+		attractionService.makePlan(planDto);
+		int planId = attractionService.getPlanId((String) map.get("userId"));
+		
+		int idx = 1;
+		List<Integer> contentIds = (List<Integer>) map.get("contentIds");
+		for (Integer id : contentIds) {
+			PlanInfoDto planInfoDto = new PlanInfoDto();
+			planInfoDto.setPlanId(planId);
+			planInfoDto.setContentId(id);
+			planInfoDto.setSequence(idx++);
+			attractionService.planInfo(planInfoDto);
+		}
+		
+		BasicDto response = BasicDto.builder()
+				.status(StatusEnum.OK)
+				.message("플랜 생성 완료")
+				.data(planDto)
+				.build();
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 	// 플랜 수정
 	@PutMapping("/rest")
@@ -122,20 +154,6 @@ public class PlanRestController {
 	public ResponseEntity<Map<String,Object>> delete(@PathVariable("planId") int id){
 		planService.deletePlanInfo(id);
 		planService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	// 후기 작성
-	@PostMapping("/rest")
-	public ResponseEntity<Map<String, Object>> write(@RequestBody Map<String,Object> map){
-
-		ReviewDto reviewDto = new ReviewDto();
-		reviewDto.setUserId((String) map.get("userId"));
-		reviewDto.setPlanId(Integer.parseInt((String) map.get("planId")));
-		reviewDto.setTitle((String) map.get("title"));
-		reviewDto.setContent((String) map.get("content"));
-
-		planService.write(reviewDto);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
