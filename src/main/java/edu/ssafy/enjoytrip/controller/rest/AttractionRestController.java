@@ -16,7 +16,9 @@ import edu.ssafy.enjoytrip.dto.attraction.GugunDto;
 import edu.ssafy.enjoytrip.dto.attraction.SidoDto;
 import edu.ssafy.enjoytrip.dto.plan.PlanDto;
 import edu.ssafy.enjoytrip.service.attraction.AttractionService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/attraction")
 public class AttractionRestController {
@@ -32,25 +34,17 @@ public class AttractionRestController {
 	public ResponseEntity<Map<String, Object>> sido(){
 
 		Map<String, Object> map = new HashMap<>();
-		try {
-			List<SidoDto> sido = attractionService.selectSido();
-			map.put("sido", sido);
-			return new ResponseEntity<>(map, HttpStatus.OK);
-		}catch (Exception e){
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		List<SidoDto> sido = attractionService.selectSido();
+		map.put("sido", sido);
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
 	@GetMapping("/rest/{code}")
 	public ResponseEntity<Map<String, Object>> gugun(@PathVariable("code") int code){
 		Map<String, Object> map = new HashMap<>();
-		try {
-			List<GugunDto> gugun = attractionService.selectGugun(code);
-			map.put("gugun", gugun);
-			return new ResponseEntity<>(map, HttpStatus.OK);
-		} catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		List<GugunDto> gugun = attractionService.selectGugun(code);
+		map.put("gugun", gugun);
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
 	@GetMapping("/rest/{contentTypeId}/{sidoCode}/{gugunCode}")
@@ -62,68 +56,49 @@ public class AttractionRestController {
 		attractionDto.setContentTypeId(contentTypeId);
 		attractionDto.setSidoCode(sidoCode);
 		attractionDto.setGugunCode(gugunCode);
-		System.out.println(attractionDto.toString());
-		try {
-			List<AttractionDto> list = attractionService.select(attractionDto);
-			map.put("list", list);
-			return new ResponseEntity<>(map, HttpStatus.OK);
-		}catch (Exception e){
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		log.info(attractionDto.toString());
+		List<AttractionDto> list = attractionService.select(attractionDto);
+		map.put("list", list);
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	
 	@GetMapping("/rest/contentId/{contentId}")
 	public ResponseEntity<Map<String, Object>> selectByContentId(@PathVariable("contentId") int contentId) {
 		Map<String, Object> map = new HashMap<>();
-		try {
-			AttractionDto attractionDto = attractionService.selectByContentId(contentId);
-			map.put("attractionDto", attractionDto);
-			return new ResponseEntity<>(map, HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		AttractionDto attractionDto = attractionService.selectByContentId(contentId);
+		map.put("attractionDto", attractionDto);
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
 	@PostMapping("/rest")
 	public ResponseEntity<BasicDto> makePlan(@RequestBody Map<String, Object> map) {
-		BasicDto response;
+		PlanDto planDto = new PlanDto();
+		planDto.setUserId((String) map.get("userId"));
+		planDto.setStartDate((String) map.get("startDate"));
+		planDto.setEndDate((String) map.get("endDate"));
+		planDto.setTitle((String) map.get("title"));
+		planDto.setMemo((String) map.get("memo"));
+		planDto.setShare((String) map.get("share"));
+		attractionService.makePlan(planDto);
+		int planId = attractionService.getPlanId((String) map.get("userId"));
 		
-		try {
-			PlanDto planDto = new PlanDto();
-			planDto.setUserId((String) map.get("userId"));
-			planDto.setStartDate((String) map.get("startDate"));
-			planDto.setEndDate((String) map.get("endDate"));
-			planDto.setTitle((String) map.get("title"));
-			planDto.setMemo((String) map.get("memo"));
-			planDto.setShare((String) map.get("share"));
-			attractionService.makePlan(planDto);
-			int planId = attractionService.getPlanId((String) map.get("userId"));
-			
-			int idx = 1;
-			List<Integer> contentIds = (List<Integer>) map.get("contentIds");
-			for (Integer id : contentIds) {
-				PlanInfoDto planInfoDto = new PlanInfoDto();
-				planInfoDto.setPlanId(planId);
-				planInfoDto.setContentId(id);
-				planInfoDto.setSequence(idx++);
-				attractionService.planInfo(planInfoDto);
-			}
-			
-			response = BasicDto.builder()
-					.status(StatusEnum.OK)
-					.message("플랜 생성 완료")
-					.data(planDto)
-					.build();
-			
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		}catch (Exception e){
-			response = BasicDto.builder()
-					.status(StatusEnum.INTERNAL_SERER_ERROR)
-					.message("플랜 생성 실패")
-					.data(e.getMessage())
-					.build();
-			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		int idx = 1;
+		List<Integer> contentIds = (List<Integer>) map.get("contentIds");
+		for (Integer id : contentIds) {
+			PlanInfoDto planInfoDto = new PlanInfoDto();
+			planInfoDto.setPlanId(planId);
+			planInfoDto.setContentId(id);
+			planInfoDto.setSequence(idx++);
+			attractionService.planInfo(planInfoDto);
 		}
+		
+		BasicDto response = BasicDto.builder()
+				.status(StatusEnum.OK)
+				.message("플랜 생성 완료")
+				.data(planDto)
+				.build();
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }

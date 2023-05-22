@@ -32,53 +32,32 @@ public class MemberRestController {
     public ResponseEntity<BasicDto> login(@RequestBody Map<String, String> map) {
 		String userId = map.get("id");
 		String userPwd = map.get("password");
-
-		BasicDto response;
 		
-		try {
-			MemberDto memberDto = memberService.loginMember(userId, sha256.SHA(userPwd));
-	        String token = jwtTokenProvider.createToken(memberDto.getUserId(), memberDto.getUserName());
-	        
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.add("access-token", token);
-	        
-	        response = BasicDto.builder()
-	        		.status(StatusEnum.OK)
-	        		.message("success")
-	        		.build();
-	        
-	        return new ResponseEntity<>(response, headers, HttpStatus.OK);
-		} catch (Exception e) {
-			response = BasicDto.builder()
-					.status(StatusEnum.BAD_REQUEST)
-					.message("failed")
-					.build();
-			
-			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-		}
+		MemberDto memberDto = memberService.loginMember(userId, sha256.SHA(userPwd));
+        String token = jwtTokenProvider.createToken(memberDto.getUserId(), memberDto.getUserName());
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("access-token", token);
+        
+        BasicDto response = BasicDto.builder()
+        		.status(StatusEnum.OK)
+        		.message("success")
+        		.build();
+        
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
     }
 	
 	@PostMapping("/join")
     public ResponseEntity<BasicDto> join(@RequestBody MemberDto dto) {
-		BasicDto response;
-		try {
-			dto.setUserPassword(sha256.SHA(dto.getUserPassword()));
-			memberService.joinMember(dto);
+		dto.setUserPassword(sha256.SHA(dto.getUserPassword()));
+		memberService.joinMember(dto);
 
-	        response = BasicDto.builder()
-	        		.status(StatusEnum.OK)
-	        		.message("success")
-	        		.build();
-	        
-	        return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			response = BasicDto.builder()
-					.status(StatusEnum.BAD_REQUEST)
-					.message("failed")
-					.build();
-			
-			return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-		}
+        BasicDto response = BasicDto.builder()
+        		.status(StatusEnum.OK)
+        		.message("success")
+        		.build();
+        
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 	
 	@GetMapping("/info/{userId}")

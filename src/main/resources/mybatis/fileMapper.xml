@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ssafy.enjoytrip.repository.file.FileRepository">
+   <resultMap id="fileMap" type="fileDto">
+      <result column="fid" property="fid" jdbcType="INTEGER" javaType="int" />
+      <result column="name" property="name" jdbcType="VARCHAR" javaType="String" />
+      <result column="path" property="path" jdbcType="VARCHAR" javaType="String" />
+   </resultMap>
+   
+   <select id="selectFile" resultType="Integer">
+   		select *
+   		from files
+   		where pid=#{pid}
+   </select>
+   
+   <insert id="saveFile" parameterType="fileDto">
+   		insert into members(name, path)
+   		values (#{name}, #{path})
+   </insert>
+
+   <delete id="deleteFile" parameterType="int">
+      delete from files 
+      where pid=#{pid}
+   </delete>
+
+</mapper>
