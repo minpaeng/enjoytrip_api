@@ -58,11 +58,11 @@ public class FileHandler {
 				validateContentType(multipartFile);
 
 				// 유니크한 파일명 설정
-				String new_file_name = System.nanoTime() + multipartFile.getOriginalFilename();
+				String newFileName = System.nanoTime() + multipartFile.getOriginalFilename();
 
 				// 업로드 한 파일 데이터를 지정한 파일에 저장
-				file = new File(path + File.separator + new_file_name);
-				log.info("저장될 파일 경로: " + path + File.separator + new_file_name);
+				file = new File(path + File.separator + newFileName);
+				log.info("저장될 파일 경로: " + path + File.separator + newFileName);
 				try {
 					multipartFile.transferTo(file);
 					
@@ -70,8 +70,8 @@ public class FileHandler {
 					ReviewFileDto fileDto = new ReviewFileDto();
 					fileDto.setReviewId(reviewId);
 					fileDto.setFid(++fid);
-					fileDto.setName(file.getName());
-					fileDto.setPath(file.getAbsolutePath());
+					fileDto.setName(multipartFile.getOriginalFilename());
+					fileDto.setPath(File.separator + current_date + File.separator + newFileName);
 					log.info(String.valueOf(fileDto));
 
 					reviewFileRepository.saveFile(fileDto);
