@@ -12,29 +12,29 @@
    
    <select id="selectFileByFid" resultType="Integer">
    		select *
-   		from files
+   		from review_files
    		where pid=#{pid}
    </select>
    
    <select id="selectFileByReviewId" resultMap="fileMap">
    		select *
-   		from files
+   		from review_files
    		where review_id=#{reviewId}
    </select>
    
    <select id="selectFile" resultType="Integer">
    		select *
-   		from files
+   		from review_files
    		where pid=#{pid}
    </select>
    
    <insert id="saveFile" parameterType="reviewFileDto">
-   		insert into members(name, path)
-   		values (#{name}, #{path})
+   		insert into review_files
+   		values (#{reviewId}, #{fid}, #{name}, #{path})
    </insert>
 
    <delete id="deleteFile" parameterType="int">
-      delete from files 
+      delete from review_files 
       where pid=#{pid}
    </delete>
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ssafy.enjoytrip.repository.review.ReviewRepository">
+   <resultMap id="reviewMap" type="reviewDto">
+   <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="int" />
+      <result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+      <result column="title" property="title" jdbcType="VARCHAR" javaType="String" />
+      <result column="content" property="content" jdbcType="VARCHAR" javaType="String" />
+      <result column="visit_date" property="visitDate" jdbcType="TIMESTAMP" javaType="String" />
+      <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" javaType="String" />
+      <result column="hit" property="hit" jdbcType="INTEGER" javaType="int" />
+   </resultMap>
+   
+   <select id="selectReviewIdByUserId" parameterType="String" resultType="Integer">
+   		select review_id
+   		from review
+   		where user_id=#{userId}
+   		order by register_time desc
+   		limit 1
+   </select>
+   
+   <!-- <select id="selectFileByReviewId" resultMap="fileMap">
+   		select *
+   		from files
+   		where review_id=#{reviewId}
+   </select>
+   
+   <select id="selectFile" resultType="Integer">
+   		select *
+   		from files
+   		where pid=#{pid}
+   </select> -->
+   
+   <insert id="createReview" parameterType="reviewDto">
+   		insert into review(user_id, title, content, visit_date)
+   		values (#{userId}, #{title}, #{content}, #{visitDate})
+   </insert>
+
+<!--    <delete id="deleteFile" parameterType="int">
+      delete from files 
+      where pid=#{pid}
+   </delete>
+ -->
+</mapper>

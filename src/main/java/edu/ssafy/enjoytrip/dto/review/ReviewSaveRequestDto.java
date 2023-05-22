@@ -12,4 +12,15 @@ public class ReviewSaveRequestDto {
 	private String title;
 	private String content;
 	private String visitDate;
+	
+	public ReviewDto toReviewDto() {
+    	ReviewDto reviewDto = new ReviewDto();
+    	
+    	reviewDto.setUserId(this.getUserId());
+    	reviewDto.setTitle(this.getTitle());
+    	reviewDto.setContent(this.getContent());
+    	reviewDto.setVisitDate(this.getVisitDate());
+    	
+    	return reviewDto;
+    }
 }

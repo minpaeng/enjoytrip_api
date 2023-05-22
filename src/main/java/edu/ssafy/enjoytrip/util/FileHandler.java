@@ -51,6 +51,7 @@ public class FileHandler {
 			}
 
 			// 다중 파일 처리
+			int fid = 0;
 			for (MultipartFile multipartFile : multipartFiles) {
 
 				// 이미지 파일인지 검증
@@ -61,16 +62,20 @@ public class FileHandler {
 
 				// 업로드 한 파일 데이터를 지정한 파일에 저장
 				file = new File(path + File.separator + new_file_name);
-				log.info("저장될 파일 경로: " + path + "/" + new_file_name);
+				log.info("저장될 파일 경로: " + path + File.separator + new_file_name);
 				try {
 					multipartFile.transferTo(file);
 					
 					//DB에 파일 정보 저장
 					ReviewFileDto fileDto = new ReviewFileDto();
 					fileDto.setReviewId(reviewId);
+					fileDto.setFid(++fid);
 					fileDto.setName(file.getName());
 					fileDto.setPath(file.getAbsolutePath());
+					log.info(String.valueOf(fileDto));
+
 					reviewFileRepository.saveFile(fileDto);
+					
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
@@ -129,7 +134,7 @@ public class FileHandler {
 		}
 	}
 
-	public void deletePhotosInServer(List<FileDto> photos) {
+	public void deletePhotosInServer(List<ReviewFileDto> photos) {
 		for (FileDto photo : photos) {
 			String filePath = reviewPath + photo.getName();
 			try {

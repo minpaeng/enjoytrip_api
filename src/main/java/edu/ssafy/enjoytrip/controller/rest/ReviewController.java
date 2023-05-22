@@ -33,7 +33,13 @@ public class ReviewController {
 
 		log.info(String.valueOf(reviewSaveRequestDto));
 		
-		reviewService.createReview(reviewSaveRequestDto, files);
+		try {
+			reviewService.createReview(reviewSaveRequestDto, files);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
 		
 		BasicDto response = BasicDto.builder()
 				.status(StatusEnum.OK)
