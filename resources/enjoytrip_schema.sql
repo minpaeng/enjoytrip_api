@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`gugun` (
   `gugun_name` VARCHAR(30) NULL DEFAULT NULL,
   `sido_code` INT NOT NULL,
   PRIMARY KEY (`gugun_code`, `sido_code`),
-  INDEX `gugun_to_sido_sido_code_fk_idx` (`sido_code` ASC) ,
+  INDEX `gugun_to_sido_sido_code_fk_idx` (`sido_code` ASC) VISIBLE,
   CONSTRAINT `gugun_to_sido_sido_code_fk`
     FOREIGN KEY (`sido_code`)
     REFERENCES `enjoytrip`.`sido` (`sido_code`))
@@ -65,9 +65,9 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`attraction_info` (
   `longitude` DECIMAL(20,17) NULL DEFAULT NULL,
   `mlevel` VARCHAR(2) NULL DEFAULT NULL,
   PRIMARY KEY (`content_id`),
-  INDEX `attraction_to_content_type_id_fk_idx` (`content_type_id` ASC) ,
-  INDEX `attraction_to_sido_code_fk_idx` (`sido_code` ASC) ,
-  INDEX `attraction_to_gugun_code_fk_idx` (`gugun_code` ASC) ,
+  INDEX `attraction_to_content_type_id_fk_idx` (`content_type_id` ASC) VISIBLE,
+  INDEX `attraction_to_sido_code_fk_idx` (`sido_code` ASC) VISIBLE,
+  INDEX `attraction_to_gugun_code_fk_idx` (`gugun_code` ASC) VISIBLE,
   CONSTRAINT `attraction_to_content_type_id_fk`
     FOREIGN KEY (`content_type_id`)
     REFERENCES `enjoytrip`.`content_type` (`content_type_id`),
@@ -144,13 +144,40 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`info_board` (
   `hit` INT NULL DEFAULT '0',
   `register_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`info_board_id`),
-  INDEX `info_board_to_members_user_id_idx` (`user_id` ASC) ,
+  INDEX `info_board_to_members_user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `info_board_to_members_user_id`
     FOREIGN KEY (`user_id`)
     REFERENCES `enjoytrip`.`members` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 21
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `enjoytrip`.`info_board_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `enjoytrip`.`info_board_comment` (
+  `info_board_comment_id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` VARCHAR(16) NOT NULL,
+  `info_board_id` INT NOT NULL,
+  `register_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `content` VARCHAR(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`info_board_comment_id`),
+  INDEX `info_board_comment_to_members_user_id_fk_idx` (`user_id` ASC) VISIBLE,
+  INDEX `info_board_comment_to_info_board_info_board_id_fk_idx` (`info_board_id` ASC) VISIBLE,
+  CONSTRAINT `info_board_comment_to_info_board_info_board_id_fk`
+    FOREIGN KEY (`info_board_id`)
+    REFERENCES `enjoytrip`.`info_board` (`info_board_id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `info_board_comment_to_members_user_id_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `enjoytrip`.`members` (`user_id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 7
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -168,36 +195,14 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`plan` (
   `register_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `share` CHAR(1) NULL DEFAULT 'N',
   PRIMARY KEY (`plan_id`),
-  INDEX `plan_to_members_user_id_fk_idx` (`user_id` ASC) ,
+  INDEX `plan_to_members_user_id_fk_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `plan_to_members_user_id_fk`
     FOREIGN KEY (`user_id`)
     REFERENCES `enjoytrip`.`members` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `enjoytrip`.`plan_to_attraction_info`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `enjoytrip`.`plan_to_attraction_info` (
-  `plan_id` INT NOT NULL,
-  `content_id` INT NOT NULL,
-  `sequence` INT NOT NULL,
-  PRIMARY KEY (`sequence`, `plan_id`),
-  INDEX `plan_to_attraction_info_plan_plan_id_fk_idx` (`plan_id` ASC) ,
-  INDEX `plan_to_attraction_info_to_attraction_info_idx` (`content_id` ASC) ,
-  CONSTRAINT `plan_to_attraction_info_plan_plan_id_fk`
-    FOREIGN KEY (`plan_id`)
-    REFERENCES `enjoytrip`.`plan` (`plan_id`),
-  CONSTRAINT `plan_to_attraction_info_to_attraction_info`
-    FOREIGN KEY (`content_id`)
-    REFERENCES `enjoytrip`.`attraction_info` (`content_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
+AUTO_INCREMENT = 18
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -211,11 +216,12 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`review` (
   `plan_id` INT NULL DEFAULT NULL,
   `title` VARCHAR(100) NOT NULL,
   `content` VARCHAR(500) NULL DEFAULT NULL,
+  `visit_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `register_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `hit` INT NULL DEFAULT 0,
+  `hit` INT NULL DEFAULT '0',
   PRIMARY KEY (`review_id`),
-  INDEX `review_to_members_user_id_fk_idx` (`user_id` ASC) ,
-  INDEX `review_to_plan_fk_idx` (`plan_id` ASC) ,
+  INDEX `review_to_members_user_id_fk_idx` (`user_id` ASC) VISIBLE,
+  INDEX `review_to_plan_fk_idx` (`plan_id` ASC) VISIBLE,
   CONSTRAINT `review_to_members_user_id_fk`
     FOREIGN KEY (`user_id`)
     REFERENCES `enjoytrip`.`members` (`user_id`)
@@ -224,8 +230,94 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`review` (
   CONSTRAINT `review_to_plan_fk`
     FOREIGN KEY (`plan_id`)
     REFERENCES `enjoytrip`.`plan` (`plan_id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 8
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `enjoytrip`.`like`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `enjoytrip`.`like` (
+  `review_id` INT NOT NULL,
+  `user_id` VARCHAR(16) NOT NULL,
+  PRIMARY KEY (`review_id`, `user_id`),
+  INDEX `like_to_members_user_id_fk_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `like_to_members_user_id_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `enjoytrip`.`members` (`user_id`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE,
+  CONSTRAINT `like_to_review_review_id_fk`
+    FOREIGN KEY (`review_id`)
+    REFERENCES `enjoytrip`.`review` (`review_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `enjoytrip`.`plan_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `enjoytrip`.`plan_comment` (
+  `plan_comment_id` INT NOT NULL AUTO_INCREMENT,
+  `plan_id` INT NOT NULL,
+  `user_id` VARCHAR(16) NOT NULL,
+  `register_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `content` VARCHAR(200) NULL DEFAULT NULL,
+  PRIMARY KEY (`plan_comment_id`),
+  INDEX `plan_comment_to_plan_plan_id_fk_idx` (`plan_id` ASC) VISIBLE,
+  INDEX `plan_comment_to_members_user_id_fk_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `plan_comment_to_members_user_id_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `enjoytrip`.`members` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `plan_comment_to_plan_plan_id_fk`
+    FOREIGN KEY (`plan_id`)
+    REFERENCES `enjoytrip`.`plan` (`plan_id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `enjoytrip`.`plan_to_attraction_info`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `enjoytrip`.`plan_to_attraction_info` (
+  `plan_id` INT NOT NULL,
+  `content_id` INT NOT NULL,
+  `sequence` INT NOT NULL,
+  PRIMARY KEY (`sequence`, `plan_id`),
+  INDEX `plan_to_attraction_info_plan_plan_id_fk_idx` (`plan_id` ASC) VISIBLE,
+  INDEX `plan_to_attraction_info_to_attraction_info_idx` (`content_id` ASC) VISIBLE,
+  CONSTRAINT `plan_to_attraction_info_plan_plan_id_fk`
+    FOREIGN KEY (`plan_id`)
+    REFERENCES `enjoytrip`.`plan` (`plan_id`),
+  CONSTRAINT `plan_to_attraction_info_to_attraction_info`
+    FOREIGN KEY (`content_id`)
+    REFERENCES `enjoytrip`.`attraction_info` (`content_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `enjoytrip`.`profile_image`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `enjoytrip`.`profile_image` (
+  `user_id` VARCHAR(16) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `path` VARCHAR(4000) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `profile_image_to_members_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `enjoytrip`.`members` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -241,8 +333,8 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`review_comment` (
   `register_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `content` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`review_comment_id`),
-  INDEX `review_comment_to_review_review_id_fk_idx` (`review_id` ASC) ,
-  INDEX `review_comment_to_members_user_id_fk_idx` (`user_id` ASC) ,
+  INDEX `review_comment_to_review_review_id_fk_idx` (`review_id` ASC) VISIBLE,
+  INDEX `review_comment_to_members_user_id_fk_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `review_comment_to_members_user_id_fk`
     FOREIGN KEY (`user_id`)
     REFERENCES `enjoytrip`.`members` (`user_id`)
@@ -251,83 +343,28 @@ CREATE TABLE IF NOT EXISTS `enjoytrip`.`review_comment` (
   CONSTRAINT `review_comment_to_review_review_id_fk`
     FOREIGN KEY (`review_id`)
     REFERENCES `enjoytrip`.`review` (`review_id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
-    )
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `enjoytrip`.`like`
+-- Table `enjoytrip`.`review_files`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `enjoytrip`.`like` (
+CREATE TABLE IF NOT EXISTS `enjoytrip`.`review_files` (
   `review_id` INT NOT NULL,
-  `user_id` VARCHAR(16) NOT NULL,
-  PRIMARY KEY (`review_id`, `user_id`),
-  INDEX `like_to_members_user_id_fk_idx` (`user_id` ASC) ,
-  CONSTRAINT `like_to_review_review_id_fk`
+  `fid` INT NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `path` VARCHAR(4000) NOT NULL,
+  PRIMARY KEY (`review_id`, `fid`),
+  CONSTRAINT `review_files_to_review_fk`
     FOREIGN KEY (`review_id`)
     REFERENCES `enjoytrip`.`review` (`review_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `like_to_members_user_id_fk`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `enjoytrip`.`members` (`user_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `enjoytrip`.`plan_comment`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `enjoytrip`.`plan_comment` (
-  `plan_comment_id` INT NOT NULL AUTO_INCREMENT,
-  `plan_id` INT NOT NULL,
-  `user_id` VARCHAR(16) NOT NULL,
-  `register_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `content` VARCHAR(200) NULL,
-  PRIMARY KEY (`plan_comment_id`),
-  INDEX `plan_comment_to_plan_plan_id_fk_idx` (`plan_id` ASC) ,
-  INDEX `plan_comment_to_members_user_id_fk_idx` (`user_id` ASC) ,
-  CONSTRAINT `plan_comment_to_plan_plan_id_fk`
-    FOREIGN KEY (`plan_id`)
-    REFERENCES `enjoytrip`.`plan` (`plan_id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-  CONSTRAINT `plan_comment_to_members_user_id_fk`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `enjoytrip`.`members` (`user_id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `enjoytrip`.`info_board_comment`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `enjoytrip`.`info_board_comment` (
-  `info_board_comment_id` INT NOT NULL AUTO_INCREMENT,
-  `user_id` VARCHAR(16) NOT NULL,
-  `info_board_id` INT NOT NULL,
-  `register_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  `content` VARCHAR(200) NULL,
-  PRIMARY KEY (`info_board_comment_id`),
-  INDEX `info_board_comment_to_members_user_id_fk_idx` (`user_id` ASC) ,
-  INDEX `info_board_comment_to_info_board_info_board_id_fk_idx` (`info_board_id` ASC) ,
-  CONSTRAINT `info_board_comment_to_members_user_id_fk`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `enjoytrip`.`members` (`user_id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-  CONSTRAINT `info_board_comment_to_info_board_info_board_id_fk`
-    FOREIGN KEY (`info_board_id`)
-    REFERENCES `enjoytrip`.`info_board` (`info_board_id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
