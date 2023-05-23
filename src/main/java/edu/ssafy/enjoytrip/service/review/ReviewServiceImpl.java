@@ -1,8 +1,6 @@
 package edu.ssafy.enjoytrip.service.review;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import edu.ssafy.enjoytrip.dto.file.FileDto;
 import edu.ssafy.enjoytrip.dto.file.FileResponseDto;
 import edu.ssafy.enjoytrip.dto.file.ReviewFileDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewDto;
