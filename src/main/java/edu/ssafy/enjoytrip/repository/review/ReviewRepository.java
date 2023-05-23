@@ -20,7 +20,7 @@ public interface ReviewRepository {
 	
 	void createReview(ReviewDto reviewDto); // 리뷰 작성
 	
-	void updateHit(int reivewId); // 조회수 증가
+	void updateHit(int reviewId); // 조회수 증가
 	
 	int count(); // 총 데이터 수
 }

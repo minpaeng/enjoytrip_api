@@ -47,6 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
 		fileHandler.parseFileInfo(files, reviewId);
 	}
 
+	// 리뷰 리스트 페이징 조회
 	@Override
 	public ReviewPageResponseDto reviewList(int pgno) {
 		// 총 페이지 수 조회
@@ -83,6 +84,27 @@ public class ReviewServiceImpl implements ReviewService {
 				.pageCount(totalCount)
 				.reviews(reviewFiles)
 				.build();
+	}
+
+	// 리뷰 단건 조회
+	@Override
+	public ReviewFileResponseDto getReveiwById(int reviewId) {
+		// 리뷰 조회
+		System.out.println(reviewId);
+		ReviewDto review =  reviewRepository.selectByReviewId(reviewId);
+		
+		// 리뷰에 달린 사진 조회
+		List<ReviewFileDto> files = reviewFileRepository.selectFileByReviewId(reviewId);
+		List<FileResponseDto> fileDtos = new ArrayList<>();
+		for (ReviewFileDto file : files) {
+			FileResponseDto fileDto = FileResponseDto.builder()
+					.fid(file.getFid())
+					.filePath(reviewImagePath + file.getPath())
+					.build();
+			fileDtos.add(fileDto);
+		}
+
+		return new ReviewFileResponseDto(review, fileDtos);
 	}
 
 }

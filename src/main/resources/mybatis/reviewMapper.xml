@@ -22,6 +22,12 @@
    		limit 1
    </select>
    
+   <select id="selectByReviewId" parameterType="int" resultType="reviewDto">
+   	select *
+   	from review
+   	where review_id=#{reviewId}
+   </select>
+   
    <select id="list" resultMap="reviewMap">
    		select *
    		from review
