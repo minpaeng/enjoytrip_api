@@ -71,7 +71,7 @@ public class FileHandler {
 					fileDto.setReviewId(reviewId);
 					fileDto.setFid(++fid);
 					fileDto.setName(multipartFile.getOriginalFilename());
-					fileDto.setPath(File.separator + current_date + File.separator + newFileName);
+					fileDto.setPath("/" + current_date + "/" + newFileName);
 					log.info(String.valueOf(fileDto));
 
 					reviewFileRepository.saveFile(fileDto);

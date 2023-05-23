@@ -2,10 +2,11 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="edu.ssafy.enjoytrip.repository.review.ReviewRepository">
-   <resultMap id="reviewMap" type="reviewDto">
-   <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="int" />
+	<mapper namespace="edu.ssafy.enjoytrip.repository.review.ReviewRepository">
+   	  <resultMap id="reviewMap" type="reviewDto">
+   	  <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="int" />
       <result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+      <result column="plan_id" property="planId" jdbcType="INTEGER" javaType="String" />
       <result column="title" property="title" jdbcType="VARCHAR" javaType="String" />
       <result column="content" property="content" jdbcType="VARCHAR" javaType="String" />
       <result column="visit_date" property="visitDate" jdbcType="TIMESTAMP" javaType="String" />
@@ -21,17 +22,17 @@
    		limit 1
    </select>
    
-   <!-- <select id="selectFileByReviewId" resultMap="fileMap">
+   <select id="list" resultMap="reviewMap">
    		select *
-   		from files
-   		where review_id=#{reviewId}
+   		from review
+   		order by register_time desc
+   		limit #{offset}, #{size}
    </select>
    
-   <select id="selectFile" resultType="Integer">
-   		select *
-   		from files
-   		where pid=#{pid}
-   </select> -->
+   <select id="count" resultType="Integer">
+   		select count(review_id)
+   		from review
+   </select>
    
    <insert id="createReview" parameterType="reviewDto">
    		insert into review(user_id, title, content, visit_date)

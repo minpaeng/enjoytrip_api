@@ -5,14 +5,18 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.ssafy.enjoytrip.dto.BasicDto;
 import edu.ssafy.enjoytrip.dto.StatusEnum;
+import edu.ssafy.enjoytrip.dto.review.ReviewPageResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
 import edu.ssafy.enjoytrip.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -30,16 +34,8 @@ public class ReviewController {
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<BasicDto> createReview(@RequestPart(name = "review") ReviewSaveRequestDto reviewSaveRequestDto,
 							@RequestPart(name = "files", required = false) List<MultipartFile> files) {
-
-		log.info(String.valueOf(reviewSaveRequestDto));
 		
-		try {
-			reviewService.createReview(reviewSaveRequestDto, files);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			e.printStackTrace();
-			throw new IllegalStateException(e);
-		}
+		reviewService.createReview(reviewSaveRequestDto, files);
 		
 		BasicDto response = BasicDto.builder()
 				.status(StatusEnum.OK)
@@ -48,5 +44,11 @@ public class ReviewController {
 				.build();
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	// 후기 목록 조회
+	@GetMapping
+	public ReviewPageResponseDto reviewList(@RequestParam(required = false, defaultValue = "1") int pgno) {
+		return reviewService.reviewList(pgno);
 	}
 }

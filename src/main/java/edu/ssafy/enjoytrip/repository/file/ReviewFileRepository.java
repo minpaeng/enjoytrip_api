@@ -9,7 +9,10 @@ import edu.ssafy.enjoytrip.dto.file.ReviewFileDto;
 @Mapper
 public interface ReviewFileRepository {
 	ReviewFileDto selectFileByFid(int pid);
+	
 	List<ReviewFileDto> selectFileByReviewId(int reviewId);
+	
 	void saveFile(ReviewFileDto fileDto);
+	
 	void deleteFile(int pid);
 }

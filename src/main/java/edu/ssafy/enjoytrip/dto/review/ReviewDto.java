@@ -1,15 +1,17 @@
 package edu.ssafy.enjoytrip.dto.review;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
 @ToString
 @Data
+@Builder
 public class ReviewDto {
 
     int reviewId;
     String userId;
-    int planId;
+    String planId;
     String title;
     String content;
     String visitDate;
