@@ -18,6 +18,7 @@
      <typeAlias type="edu.ssafy.enjoytrip.dto.file.ReviewFileDto" alias="reviewFileDto"/>
      <typeAlias type="edu.ssafy.enjoytrip.dto.review.ReviewDto" alias="reviewDto"/>
      <typeAlias type="edu.ssafy.enjoytrip.dto.like.LikeDto" alias="likeDto"/>
+     <typeAlias type="edu.ssafy.enjoytrip.dto.like.LikeCountDto" alias="likeCountDto"/>
   </typeAliases>
 
   <mappers>

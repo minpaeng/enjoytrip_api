@@ -1,7 +1,9 @@
 package edu.ssafy.enjoytrip.service.review;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,16 +12,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.ssafy.enjoytrip.dto.file.FileResponseDto;
 import edu.ssafy.enjoytrip.dto.file.ReviewFileDto;
+import edu.ssafy.enjoytrip.dto.like.LikeCountDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewFileResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewPageResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
+import edu.ssafy.enjoytrip.dto.review.ReviewTop3ResponseDto;
 import edu.ssafy.enjoytrip.repository.file.ReviewFileRepository;
+import edu.ssafy.enjoytrip.repository.like.LikeRepository;
 import edu.ssafy.enjoytrip.repository.review.ReviewRepository;
 import edu.ssafy.enjoytrip.util.FileHandler;
 import edu.ssafy.enjoytrip.util.SizeConstant;
+import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
@@ -29,6 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final FileHandler fileHandler;
 	private final ReviewFileRepository reviewFileRepository;
+	private final LikeRepository likeRepository;
 	
 	// 리뷰 작성
 	@Override
@@ -111,10 +120,15 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public List<ReviewDto> top3Reviews() {
 		// 좋아요 수가 높은 상위 3개 아이디 목록을 조회
+		List<LikeCountDto> reviewIds = likeRepository.selectTop3ReviewIds();
 		
 		// 해당 아이디에 대해 리뷰 조회(in 쿼리 사용)
-		
-		return null;
+		List<ReviewDto> top3Reviews = reviewRepository.top3Reviews(reviewIds.stream()
+																	.map(t -> t.getReviewId())
+																	.collect(Collectors.toList()));
+		return top3Reviews.stream()
+				.map(ReviewTop3ResponseDto::new)
+				.collect(Collectors.toList());
 	}
 
 }

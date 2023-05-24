@@ -8,12 +8,13 @@
       <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="String" />
    </resultMap>
    
-   <select id="selectTop3ReviewIds" parameterType="String" resultType="list">
-   		select review_id
-   		from review
-   		where user_id=#{userId}
-   		order by register_time desc
-   		limit 3
+   <select id="selectTop3ReviewIds" resultType="likeCountDto">
+   		select r.review_id as reviewId, count(l.user_id) as count
+   		from review r left outer join likes l
+        on l.review_id = r.review_id
+   		group by l.review_id
+   		order by count(l.user_id) desc
+   		limit 3;
    </select>
    
    <insert id="createLike" parameterType="reviewDto">

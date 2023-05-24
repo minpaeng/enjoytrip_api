@@ -51,7 +51,7 @@ public class ReviewController {
 	// 후기 목록 조회
 	@GetMapping
 	public ReviewPageResponseDto reviewList(@RequestParam(required = false, defaultValue = "1") int pgno) {
-		return reviewService.reviewList(pgno);
+		return reviewService.reviewList(pgno - 1);
 	}
 	
 	// 후기 한 개 조회

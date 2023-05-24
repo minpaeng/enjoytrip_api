@@ -39,19 +39,18 @@
    		limit #{offset}, #{size}
    </select>
    
-   <!-- <select id="top3Reviews" parameterType="java.util.List" resultMap="reviewMap">
-   	select *
-   	from review
-   	where review_id in
-   	 <choose>
-            <when test="reviewIds.length() != 0">
+   <select id="top3Reviews" parameterType="java.util.List" resultMap="reviewMap">
+	  select *
+	  from review
+   	  <choose>
+            <when test="reviewIds.size() != 0">
                where review_id in
                 <foreach collection="list" item="id" index="index" separator="," open="(" close=")">
                     #{id}
                 </foreach>
             </when>
         </choose>
-   </select> -->
+   </select>
    
    <select id="count" resultType="Integer">
    		select count(review_id)
