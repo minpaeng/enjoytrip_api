@@ -8,11 +8,11 @@
       <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="String" />
    </resultMap>
    
-   <select id="selectTop3ReviewIds" parameterType="String" resultType="list">
+   <select id="selectTop3ReviewIds" resultType="list">
    		select review_id
-   		from review
-   		where user_id=#{userId}
-   		order by register_time desc
+   		from like
+   		group by review_id
+   		order by count(user_id) desc
    		limit 3
    </select>
    

@@ -15,6 +15,7 @@ import edu.ssafy.enjoytrip.dto.review.ReviewFileResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewPageResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
 import edu.ssafy.enjoytrip.repository.file.ReviewFileRepository;
+import edu.ssafy.enjoytrip.repository.like.LikeRepository;
 import edu.ssafy.enjoytrip.repository.review.ReviewRepository;
 import edu.ssafy.enjoytrip.util.FileHandler;
 import edu.ssafy.enjoytrip.util.SizeConstant;
@@ -29,6 +30,7 @@ public class ReviewServiceImpl implements ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final FileHandler fileHandler;
 	private final ReviewFileRepository reviewFileRepository;
+	private final LikeRepository LikeRepository;
 	
 	// 리뷰 작성
 	@Override
@@ -111,6 +113,8 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public List<ReviewDto> top3Reviews() {
 		// 좋아요 수가 높은 상위 3개 아이디 목록을 조회
+		List<Integer> reviewIds = LikeRepository.selectTop3ReviewIds();
+		System.out.println(reviewIds);
 		
 		// 해당 아이디에 대해 리뷰 조회(in 쿼리 사용)
 		

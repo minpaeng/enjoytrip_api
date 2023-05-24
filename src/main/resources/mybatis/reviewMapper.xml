@@ -39,7 +39,7 @@
    		limit #{offset}, #{size}
    </select>
    
-   <!-- <select id="top3Reviews" parameterType="java.util.List" resultMap="reviewMap">
+   <select id="top3Reviews" parameterType="java.util.List" resultMap="reviewMap">
    	select *
    	from review
    	where review_id in
@@ -51,7 +51,7 @@
                 </foreach>
             </when>
         </choose>
-   </select> -->
+   </select>
    
    <select id="count" resultType="Integer">
    		select count(review_id)
