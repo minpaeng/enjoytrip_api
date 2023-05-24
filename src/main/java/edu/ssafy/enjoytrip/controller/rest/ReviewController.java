@@ -20,6 +20,7 @@ import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewFileResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewPageResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
+import edu.ssafy.enjoytrip.dto.review.ReviewTop3ResponseDto;
 import edu.ssafy.enjoytrip.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +63,7 @@ public class ReviewController {
 	
 	// 좋아요 top3 리뷰 조회
 	@GetMapping("/top3")
-	public List<ReviewDto> top3Reviews() {
+	public List<ReviewTop3ResponseDto> top3Reviews() {
 		return reviewService.top3Reviews();
 	}
 }

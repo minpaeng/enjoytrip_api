@@ -8,6 +8,7 @@ import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewFileResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewPageResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
+import edu.ssafy.enjoytrip.dto.review.ReviewTop3ResponseDto;
 
 public interface ReviewService {
 	
@@ -17,5 +18,5 @@ public interface ReviewService {
 	
 	ReviewFileResponseDto getReveiwById(int reviewId);
 	
-	List<ReviewDto> top3Reviews();
+	List<ReviewTop3ResponseDto> top3Reviews();
 }

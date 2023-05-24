@@ -118,7 +118,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	//top3 리뷰 리스트 조회
 	@Override
-	public List<ReviewDto> top3Reviews() {
+	public List<ReviewTop3ResponseDto> top3Reviews() {
 		// 좋아요 수가 높은 상위 3개 아이디 목록을 조회
 		List<LikeCountDto> reviewIds = likeRepository.selectTop3ReviewIds();
 		
@@ -126,9 +126,15 @@ public class ReviewServiceImpl implements ReviewService {
 		List<ReviewDto> top3Reviews = reviewRepository.top3Reviews(reviewIds.stream()
 																	.map(t -> t.getReviewId())
 																	.collect(Collectors.toList()));
-		return top3Reviews.stream()
-				.map(ReviewTop3ResponseDto::new)
-				.collect(Collectors.toList());
+		
+		List<ReviewTop3ResponseDto> response = new ArrayList<>();
+		for (int i = 0; i < reviewIds.size(); i++) {
+			ReviewDto review = top3Reviews.get(i);
+			ReviewTop3ResponseDto dto = new ReviewTop3ResponseDto(review, reviewIds.get(i).getCount());
+			response.add(dto);
+		}
+		return response;
+		
 	}
 
 }
