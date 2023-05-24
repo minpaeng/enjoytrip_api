@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="edu.ssafy.enjoytrip.repository.like.LikeRepository">
+   <resultMap id="likeMap" type="likeDto">
+      <result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
+      <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="String" />
+   </resultMap>
+   
+   <select id="selectTop3ReviewIds" parameterType="String" resultType="list">
+   		select review_id
+   		from review
+   		where user_id=#{userId}
+   		order by register_time desc
+   		limit 3
+   </select>
+   
+   <insert id="createLike" parameterType="reviewDto">
+   		insert into like
+   		values(#{userId}, #{reviewId})
+   </insert>
+
+	<delete id="deleteLike" parameterType="reviewDto">
+		delete from like
+		where user_id=#{userId} and review_id=#{reviewId}
+	</delete>
+</mapper>

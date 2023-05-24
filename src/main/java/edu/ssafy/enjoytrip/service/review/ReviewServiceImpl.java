@@ -107,4 +107,14 @@ public class ReviewServiceImpl implements ReviewService {
 		return new ReviewFileResponseDto(review, fileDtos);
 	}
 
+	//top3 리뷰 리스트 조회
+	@Override
+	public List<ReviewDto> top3Reviews() {
+		// 좋아요 수가 높은 상위 3개 아이디 목록을 조회
+		
+		// 해당 아이디에 대해 리뷰 조회(in 쿼리 사용)
+		
+		return null;
+	}
+
 }

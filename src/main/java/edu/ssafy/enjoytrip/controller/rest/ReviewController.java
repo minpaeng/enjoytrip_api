@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.ssafy.enjoytrip.dto.BasicDto;
 import edu.ssafy.enjoytrip.dto.StatusEnum;
+import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewFileResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewPageResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
@@ -57,5 +58,11 @@ public class ReviewController {
 	@GetMapping("/{reviewId}")
 	public ReviewFileResponseDto getReview(@PathVariable int reviewId) {
 		return reviewService.getReveiwById(reviewId);
+	}
+	
+	// 좋아요 top3 리뷰 조회
+	@GetMapping("/top3")
+	public List<ReviewDto> top3Reviews() {
+		return reviewService.top3Reviews();
 	}
 }

@@ -17,4 +17,8 @@ public class ReviewDto {
     String visitDate;
     String registerTime;
     int hit;
+    String spotName;
+    String spotAddress;
+    String x;
+    String y;
 }

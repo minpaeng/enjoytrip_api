@@ -12,9 +12,11 @@ public class ReviewFileResponseDto extends ReviewDto {
 	private List<FileResponseDto> files;
 	
 	public ReviewFileResponseDto(ReviewDto reviewDto, List<FileResponseDto> files) {
-		super(reviewDto.reviewId, reviewDto.userId, reviewDto.planId, 
-				reviewDto.title, reviewDto.content, reviewDto.visitDate, 
-				reviewDto.registerTime, reviewDto.hit);
+		super(reviewDto.getReviewId(), reviewDto.getUserId(), reviewDto.getPlanId(), 
+				reviewDto.getTitle(), reviewDto.getContent(), reviewDto.getVisitDate(), 
+				reviewDto.getRegisterTime(), reviewDto.getHit(),
+				reviewDto.getSpotName(), reviewDto.getSpotAddress(),
+				reviewDto.getX(), reviewDto.getY());
 		this.files = files;
 	}
 }

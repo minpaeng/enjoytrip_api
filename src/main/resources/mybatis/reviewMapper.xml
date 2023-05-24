@@ -12,6 +12,10 @@
       <result column="visit_date" property="visitDate" jdbcType="TIMESTAMP" javaType="String" />
       <result column="register_time" property="registerTime" jdbcType="TIMESTAMP" javaType="String" />
       <result column="hit" property="hit" jdbcType="INTEGER" javaType="int" />
+      <result column="spot_name" property="spotName" jdbcType="VARCHAR" javaType="String" />
+      <result column="spot_address" property="spotAddress" jdbcType="VARCHAR" javaType="String" />
+      <result column="x" property="x" jdbcType="VARCHAR" javaType="String" />
+      <result column="y" property="y" jdbcType="VARCHAR" javaType="String" />
    </resultMap>
    
    <select id="selectReviewIdByUserId" parameterType="String" resultType="Integer">
@@ -35,19 +39,33 @@
    		limit #{offset}, #{size}
    </select>
    
+   <!-- <select id="top3Reviews" parameterType="java.util.List" resultMap="reviewMap">
+   	select *
+   	from review
+   	where review_id in
+   	 <choose>
+            <when test="reviewIds.length() != 0">
+               where review_id in
+                <foreach collection="list" item="id" index="index" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </when>
+        </choose>
+   </select> -->
+   
    <select id="count" resultType="Integer">
    		select count(review_id)
    		from review
    </select>
    
    <insert id="createReview" parameterType="reviewDto">
-   		insert into review(user_id, title, content, visit_date)
-   		values (#{userId}, #{title}, #{content}, #{visitDate})
+   		insert into review(user_id, title, content, visit_date, spot_name, spot_address, x, y)
+   		values (#{userId}, #{title}, #{content}, #{visitDate}, #{spotName}, #{spotAddress}, #{x}, #{y})
    </insert>
 
-<!--    <delete id="deleteFile" parameterType="int">
-      delete from files 
-      where pid=#{pid}
-   </delete>
- -->
+	<update id="updateHit" parameterType="int">
+		update review
+		set hit=hit+1
+		where review_id=#{reviewId}
+	</update>
 </mapper>
