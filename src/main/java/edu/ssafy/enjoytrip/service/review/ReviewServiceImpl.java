@@ -79,7 +79,8 @@ public class ReviewServiceImpl implements ReviewService {
 						.build();
 				fileDtos.add(fileDto);
 			}
-			ReviewFileResponseDto reviewFile = new ReviewFileResponseDto(review, fileDtos);
+			int count = likeRepository.likeCount(review.getReviewId());
+			ReviewFileResponseDto reviewFile = new ReviewFileResponseDto(review, count, fileDtos);
 			
 			reviewFiles.add(reviewFile);
 		}
@@ -95,7 +96,6 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public ReviewFileResponseDto getReveiwById(int reviewId) {
 		// 리뷰 조회
-		System.out.println(reviewId);
 		ReviewDto review =  reviewRepository.selectByReviewId(reviewId);
 		
 		// 리뷰에 달린 사진 조회
@@ -110,8 +110,9 @@ public class ReviewServiceImpl implements ReviewService {
 		}
 		
 		reviewRepository.updateHit(reviewId);
+		int count = likeRepository.likeCount(reviewId);
 
-		return new ReviewFileResponseDto(review, fileDtos);
+		return new ReviewFileResponseDto(review, count, fileDtos);
 	}
 
 	//top3 리뷰 리스트 조회
@@ -122,12 +123,13 @@ public class ReviewServiceImpl implements ReviewService {
 		
 		// 해당 아이디에 대해 리뷰 조회(in 쿼리 사용)
 		List<ReviewDto> top3Reviews = reviewRepository.top3Reviews(reviewIds.stream()
-																	.map(t -> t.getReviewId())
-																	.collect(Collectors.toList()));
+																.map(t -> t.getReviewId())
+																.collect(Collectors.toList()));
 		
 		List<ReviewTop3ResponseDto> response = new ArrayList<>();
 		for (int i = 0; i < reviewIds.size(); i++) {
 			ReviewDto review = top3Reviews.get(i);
+			int count = likeRepository.likeCount(review.getReviewId());
 			
 			// 리뷰에 달린 사진 조회
 			List<ReviewFileDto> files = reviewFileRepository.selectFileByReviewId(review.getReviewId());
@@ -140,7 +142,7 @@ public class ReviewServiceImpl implements ReviewService {
 				fileDtos.add(fileDto);
 			}
 			
-			ReviewTop3ResponseDto dto = new ReviewTop3ResponseDto(review, reviewIds.get(i).getCount(), fileDtos);
+			ReviewTop3ResponseDto dto = new ReviewTop3ResponseDto(review, count, fileDtos);
 			response.add(dto);
 		}
 		return response;

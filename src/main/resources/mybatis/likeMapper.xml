@@ -5,7 +5,7 @@
   <mapper namespace="edu.ssafy.enjoytrip.repository.like.LikeRepository">
    <resultMap id="likeMap" type="likeDto">
       <result column="user_id" property="userId" jdbcType="VARCHAR" javaType="String" />
-      <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="String" />
+      <result column="review_id" property="reviewId" jdbcType="INTEGER" javaType="int" />
    </resultMap>
    
    <select id="selectTop3ReviewIds" resultType="likeCountDto">
@@ -14,16 +14,29 @@
         on l.review_id = r.review_id
    		group by l.review_id
    		order by count(l.user_id) desc
-   		limit 3;
+   		limit 3
+   </select>
+   
+   <select id="checkMarkStatus" resultType="int">
+   		select count(*)
+   		from likes
+   		where user_id=#{userId} and review_id=#{reviewId}
+   </select>
+   
+   <select id="likeCount" parameterType="int" resultType="int">
+   		select count(user_id)
+   		from likes
+   		where review_id=#{reviewId}
    </select>
    
    <insert id="createLike" parameterType="reviewDto">
-   		insert into like
-   		values(#{userId}, #{reviewId})
+   		insert into likes
+   		values(#{reviewId}, #{userId})
    </insert>
 
 	<delete id="deleteLike" parameterType="reviewDto">
-		delete from like
+		delete from likes
 		where user_id=#{userId} and review_id=#{reviewId}
 	</delete>
+	
 </mapper>
