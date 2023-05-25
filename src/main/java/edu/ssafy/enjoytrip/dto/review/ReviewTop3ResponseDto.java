@@ -1,5 +1,8 @@
 package edu.ssafy.enjoytrip.dto.review;
 
+import java.util.List;
+
+import edu.ssafy.enjoytrip.dto.file.FileResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,14 +10,16 @@ import lombok.Setter;
 @Setter
 public class ReviewTop3ResponseDto extends ReviewDto {
 	int count;
+	private List<FileResponseDto> files;
 	
-	public ReviewTop3ResponseDto(ReviewDto reviewDto, int count) {
+	public ReviewTop3ResponseDto(ReviewDto reviewDto, int count, List<FileResponseDto> files) {
 		super(reviewDto.getReviewId(), reviewDto.getUserId(), reviewDto.getPlanId(), 
 				reviewDto.getTitle(), reviewDto.getContent(), reviewDto.getVisitDate(), 
 				reviewDto.getRegisterTime(), reviewDto.getHit(),
 				reviewDto.getSpotName(), reviewDto.getSpotAddress(),
 				reviewDto.getX(), reviewDto.getY());
 		this.count = count;
+		this.files = files;
 	}
 
 }

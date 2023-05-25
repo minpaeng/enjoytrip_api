@@ -130,7 +130,19 @@ public class ReviewServiceImpl implements ReviewService {
 		List<ReviewTop3ResponseDto> response = new ArrayList<>();
 		for (int i = 0; i < reviewIds.size(); i++) {
 			ReviewDto review = top3Reviews.get(i);
-			ReviewTop3ResponseDto dto = new ReviewTop3ResponseDto(review, reviewIds.get(i).getCount());
+			
+			// 리뷰에 달린 사진 조회
+			List<ReviewFileDto> files = reviewFileRepository.selectFileByReviewId(review.getReviewId());
+			List<FileResponseDto> fileDtos = new ArrayList<>();
+			for (ReviewFileDto file : files) {
+				FileResponseDto fileDto = FileResponseDto.builder()
+						.fid(file.getFid())
+						.filePath(reviewImagePath + file.getPath())
+						.build();
+				fileDtos.add(fileDto);
+			}
+			
+			ReviewTop3ResponseDto dto = new ReviewTop3ResponseDto(review, reviewIds.get(i).getCount(), fileDtos);
 			response.add(dto);
 		}
 		return response;
