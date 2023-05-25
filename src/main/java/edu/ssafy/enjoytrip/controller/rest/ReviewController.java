@@ -22,9 +22,7 @@ import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewTop3ResponseDto;
 import edu.ssafy.enjoytrip.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/review")
