@@ -65,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
 		else totalCount = totalCount / SizeConstant.LIST_SIZE + 1;
 		
 		// 리뷰 조회
-		List<ReviewDto> reviews = reviewRepository.list(pgno * totalCount, SizeConstant.LIST_SIZE);
+		List<ReviewDto> reviews = reviewRepository.list(pgno * SizeConstant.LIST_SIZE, SizeConstant.LIST_SIZE);
 		
 		// 리뷰에 달린 사진 조회
 		List<ReviewFileResponseDto> reviewFiles = new ArrayList<>();
