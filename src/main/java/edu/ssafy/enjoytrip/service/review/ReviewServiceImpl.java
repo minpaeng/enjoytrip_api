@@ -1,7 +1,6 @@
 package edu.ssafy.enjoytrip.service.review;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,11 +22,8 @@ import edu.ssafy.enjoytrip.repository.like.LikeRepository;
 import edu.ssafy.enjoytrip.repository.review.ReviewRepository;
 import edu.ssafy.enjoytrip.util.FileHandler;
 import edu.ssafy.enjoytrip.util.SizeConstant;
-import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
@@ -112,6 +108,8 @@ public class ReviewServiceImpl implements ReviewService {
 					.build();
 			fileDtos.add(fileDto);
 		}
+		
+		reviewRepository.updateHit(reviewId);
 
 		return new ReviewFileResponseDto(review, fileDtos);
 	}

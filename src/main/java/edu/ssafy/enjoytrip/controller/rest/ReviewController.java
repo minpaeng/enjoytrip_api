@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.ssafy.enjoytrip.dto.BasicDto;
 import edu.ssafy.enjoytrip.dto.StatusEnum;
-import edu.ssafy.enjoytrip.dto.review.ReviewDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewFileResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewPageResponseDto;
 import edu.ssafy.enjoytrip.dto.review.ReviewSaveRequestDto;
